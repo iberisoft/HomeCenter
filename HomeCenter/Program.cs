@@ -1,9 +1,9 @@
-﻿using System;
+﻿using HomeCenter.Config;
+using Serilog;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using HomeCenter.Config;
-using Serilog;
 
 namespace HomeCenter
 {
