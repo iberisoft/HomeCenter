@@ -39,8 +39,8 @@ namespace HomeCenter.Config
         public static VirtualSwitchConfig FromXml(XElement element)
         {
             var obj = new VirtualSwitchConfig();
-            obj.Name = (string)element.Attribute("Name");
-            obj.Key = Enum.Parse<ConsoleKey>((string)element.Attribute("Key"));
+            obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Key = Enum.Parse<ConsoleKey>((string)element.Attribute(nameof(obj.Key)));
             obj.Check();
             return obj;
         }
@@ -48,8 +48,8 @@ namespace HomeCenter.Config
         public XElement ToXml()
         {
             return new XElement("Switch",
-                new XAttribute("Name", Name),
-                Key != 0 ? new XAttribute("Key", Key) : null);
+                new XAttribute(nameof(Name), Name),
+                Key != 0 ? new XAttribute(nameof(Key), Key) : null);
         }
     }
 }

@@ -49,9 +49,9 @@ namespace HomeCenter.Config
         public static HttpDeviceConfig FromXml(XElement element)
         {
             var obj = new HttpDeviceConfig();
-            obj.Name = (string)element.Attribute("Name");
-            obj.Type = (string)element.Attribute("Type");
-            obj.Host = (string)element.Attribute("Host");
+            obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Type = (string)element.Attribute(nameof(obj.Type));
+            obj.Host = (string)element.Attribute(nameof(obj.Host));
             obj.Check();
             return obj;
         }
@@ -59,9 +59,9 @@ namespace HomeCenter.Config
         public XElement ToXml()
         {
             return new XElement("Device",
-                new XAttribute("Name", Name),
-                new XAttribute("Type", Type),
-                new XAttribute("Host", Host));
+                new XAttribute(nameof(Name), Name),
+                new XAttribute(nameof(Type), Type),
+                new XAttribute(nameof(Host), Host));
         }
     }
 }

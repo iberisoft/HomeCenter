@@ -55,14 +55,14 @@ namespace HomeCenter.Config
         public static TriggerConfig FromXml(XElement element)
         {
             var obj = new TriggerConfig();
-            obj.Name = (string)element.Attribute("Name");
-            if (element.Attribute("StartTime") != null)
+            obj.Name = (string)element.Attribute(nameof(obj.Name));
+            if (element.Attribute(nameof(obj.StartTime)) != null)
             {
-                obj.StartTime = TimeSpan.Parse((string)element.Attribute("StartTime"));
+                obj.StartTime = TimeSpan.Parse((string)element.Attribute(nameof(obj.StartTime)));
             }
-            if (element.Attribute("EndTime") != null)
+            if (element.Attribute(nameof(obj.EndTime)) != null)
             {
-                obj.EndTime = TimeSpan.Parse((string)element.Attribute("EndTime"));
+                obj.EndTime = TimeSpan.Parse((string)element.Attribute(nameof(obj.EndTime)));
             }
             obj.Events.AddRange(element.Elements("Event").Select(element2 => EventConfig.FromXml(element2)));
             obj.Conditions.AddRange(element.Elements("Condition").Select(element2 => ConditionConfig.FromXml(element2)));
@@ -97,8 +97,8 @@ namespace HomeCenter.Config
         public static EventConfig FromXml(XElement element)
         {
             var obj = new EventConfig();
-            obj.DeviceName = (string)element.Attribute("DeviceName");
-            obj.Type = (string)element.Attribute("Type");
+            obj.DeviceName = (string)element.Attribute(nameof(obj.DeviceName));
+            obj.Type = (string)element.Attribute(nameof(obj.Type));
             obj.Check();
             return obj;
         }
@@ -156,10 +156,10 @@ namespace HomeCenter.Config
         public static ConditionConfig FromXml(XElement element)
         {
             var obj = new ConditionConfig();
-            obj.DeviceName = (string)element.Attribute("DeviceName");
-            obj.Property = (string)element.Attribute("Property");
-            obj.Value = (string)element.Attribute("Value");
-            obj.Comparison = (int?)element.Attribute("Comparison") ?? 0;
+            obj.DeviceName = (string)element.Attribute(nameof(obj.DeviceName));
+            obj.Property = (string)element.Attribute(nameof(obj.Property));
+            obj.Value = (string)element.Attribute(nameof(obj.Value));
+            obj.Comparison = (int?)element.Attribute(nameof(obj.Comparison)) ?? 0;
             obj.Check();
             return obj;
         }
@@ -199,10 +199,10 @@ namespace HomeCenter.Config
         public static ActionConfig FromXml(XElement element)
         {
             var obj = new ActionConfig();
-            obj.DeviceName = (string)element.Attribute("DeviceName");
-            obj.Command = (string)element.Attribute("Command");
-            obj.CommandData = element.Element("CommandData")?.Attributes().ToDictionary(attr => attr.Name.LocalName, attr => attr.Value);
-            obj.Delay = (float?)element.Attribute("Delay") ?? 0;
+            obj.DeviceName = (string)element.Attribute(nameof(obj.DeviceName));
+            obj.Command = (string)element.Attribute(nameof(obj.Command));
+            obj.CommandData = element.Element(nameof(obj.CommandData))?.Attributes().ToDictionary(attr => attr.Name.LocalName, attr => attr.Value);
+            obj.Delay = (float?)element.Attribute(nameof(obj.Delay)) ?? 0;
             obj.Check();
             return obj;
         }
