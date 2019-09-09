@@ -11,7 +11,7 @@ namespace HomeCenter
     {
         static string m_ConfigFolderPath = AppDomain.CurrentDomain.BaseDirectory;
 
-        static void Main(string[] args)
+        static void Main()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
@@ -29,7 +29,7 @@ namespace HomeCenter
             var automationConfig = LoadAutomationConfig(Path.Combine(m_ConfigFolderPath, "Automation.xml"));
             Automation.Start(automationConfig);
 
-            Thread.Sleep(-1);
+            Thread.Sleep(Timeout.Infinite);
             Automation.CloseDevices();
         }
 
