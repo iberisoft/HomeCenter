@@ -2,7 +2,7 @@
 using Serilog;
 using System;
 using System.IO;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Xml.Linq;
 
 namespace HomeCenter
@@ -29,7 +29,7 @@ namespace HomeCenter
             var automationConfig = LoadAutomationConfig(Path.Combine(m_ConfigFolderPath, "Automation.xml"));
             Automation.Start(automationConfig);
 
-            Task.Delay(-1).Wait();
+            Thread.Sleep(-1);
             Automation.CloseDevices();
         }
 

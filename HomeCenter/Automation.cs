@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HomeCenter
@@ -24,7 +25,7 @@ namespace HomeCenter
             {
                 var miHome = new MiHome(gatewayConfig.Password, gatewayConfig.Id);
                 m_MiHomeObjects.Add(miHome);
-                Task.Delay(5000).Wait();
+                Thread.Sleep(5000);
 
                 m_Devices.Add(gatewayConfig.Name, miHome.GetGateway());
                 foreach (var device in miHome.GetDevices())
@@ -140,7 +141,7 @@ namespace HomeCenter
                     {
                         if (actionConfig.Delay > 0)
                         {
-                            Task.Delay(TimeSpan.FromSeconds(actionConfig.Delay)).Wait();
+                            Thread.Sleep(TimeSpan.FromSeconds(actionConfig.Delay));
                         }
                         if (triggerConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
                         {
