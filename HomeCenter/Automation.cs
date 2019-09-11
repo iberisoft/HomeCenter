@@ -15,8 +15,8 @@ namespace HomeCenter
 {
     static class Automation
     {
-        static List<MiHome> m_MiHomeObjects = new List<MiHome>();
-        static Dictionary<string, object> m_Devices = new Dictionary<string, object>();
+        static readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
+        static readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
 
         public static bool FindDevices(HardwareConfig config)
         {

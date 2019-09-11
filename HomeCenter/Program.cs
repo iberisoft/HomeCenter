@@ -9,7 +9,7 @@ namespace HomeCenter
 {
     static class Program
     {
-        static string m_ConfigFolderPath = AppDomain.CurrentDomain.BaseDirectory;
+        static readonly string m_ConfigFolderPath = AppDomain.CurrentDomain.BaseDirectory;
 
         static void Main()
         {

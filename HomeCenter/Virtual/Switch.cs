@@ -6,7 +6,7 @@ namespace HomeCenter.Virtual
 {
     public class Switch
     {
-        static List<Switch> m_Objects = new List<Switch>();
+        static readonly List<Switch> m_Objects = new List<Switch>();
 
         public Switch()
         {
