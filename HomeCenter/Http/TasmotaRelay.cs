@@ -21,20 +21,11 @@ namespace HomeCenter.Http
             }
         }
 
-        public void TurnOn()
-        {
-            SendCommand("on");
-        }
+        public void TurnOn() => SendCommand("on");
 
-        public void TurnOff()
-        {
-            SendCommand("off");
-        }
+        public void TurnOff() => SendCommand("off");
 
-        public void Toggle()
-        {
-            SendCommand("toggle");
-        }
+        public void Toggle() => SendCommand("toggle");
 
         protected override string SendCommand(string command)
         {
@@ -43,9 +34,6 @@ namespace HomeCenter.Http
             return base.SendCommand($"cm?cmnd=power" + command);
         }
 
-        public override string ToString()
-        {
-            return $"Status: {Status}";
-        }
+        public override string ToString() => $"Status: {Status}";
     }
 }

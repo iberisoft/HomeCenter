@@ -70,10 +70,7 @@ namespace HomeCenter.Config
             return obj;
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 
     class EventConfig
@@ -103,10 +100,7 @@ namespace HomeCenter.Config
             return obj;
         }
 
-        public override string ToString()
-        {
-            return $"{DeviceName}.{Type}";
-        }
+        public override string ToString() => $"{DeviceName}.{Type}";
     }
 
     class ConditionConfig
@@ -164,10 +158,7 @@ namespace HomeCenter.Config
             return obj;
         }
 
-        public override string ToString()
-        {
-            return $"{DeviceName}.{Property} {ComparisonAsChar} {Value}";
-        }
+        public override string ToString() => $"{DeviceName}.{Property} {ComparisonAsChar} {Value}";
     }
 
     class ActionConfig
@@ -207,9 +198,6 @@ namespace HomeCenter.Config
             return obj;
         }
 
-        public override string ToString()
-        {
-            return $"{DeviceName}.{Command}";
-        }
+        public override string ToString() => $"{DeviceName}.{Command}";
     }
 }

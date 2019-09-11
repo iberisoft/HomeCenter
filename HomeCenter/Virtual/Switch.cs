@@ -40,9 +40,6 @@ namespace HomeCenter.Virtual
 
         public event EventHandler OnClick;
 
-        public override string ToString()
-        {
-            return $"Last status: {Status}";
-        }
+        public override string ToString() => $"Last status: {Status}";
     }
 }
