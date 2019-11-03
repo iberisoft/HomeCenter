@@ -2,7 +2,7 @@
 
 namespace HomeCenter.Http
 {
-    public class ShellyRelay : Device
+    public class ShellyRelay : HttpDevice
     {
         public bool Status
         {

@@ -2,7 +2,7 @@
 
 namespace HomeCenter.Http
 {
-    public class TasmotaRelay : Device
+    public class TasmotaRelay : HttpDevice
     {
         public bool Status
         {

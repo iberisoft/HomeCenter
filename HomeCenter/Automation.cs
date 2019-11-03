@@ -1,4 +1,5 @@
 ﻿using HomeCenter.Config;
+using HomeCenter.Http;
 using MiHomeLib;
 using MiHomeLib.Devices;
 using Serilog;
@@ -42,7 +43,7 @@ namespace HomeCenter
             }
             foreach (var deviceConfig in config.Http.Devices)
             {
-                var device = Http.Device.Create(deviceConfig.Type);
+                var device = HttpDevice.Create(deviceConfig.Type);
                 if (device != null)
                 {
                     device.Host = deviceConfig.Host;

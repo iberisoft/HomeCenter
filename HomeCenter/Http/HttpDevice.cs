@@ -3,7 +3,7 @@ using System.Net;
 
 namespace HomeCenter.Http
 {
-    public abstract class Device
+    public abstract class HttpDevice
     {
         string m_Host;
         readonly WebClient m_WebClient = new WebClient();
@@ -32,10 +32,10 @@ namespace HomeCenter.Http
             }
         }
 
-        public static Device Create(string typeName)
+        public static HttpDevice Create(string typeName)
         {
-            var type = Type.GetType(typeof(Device).Namespace + "." + typeName);
-            return type != null ? Activator.CreateInstance(type) as Device : null;
+            var type = Type.GetType(typeof(HttpDevice).Namespace + "." + typeName);
+            return type != null ? Activator.CreateInstance(type) as HttpDevice : null;
         }
     }
 }
