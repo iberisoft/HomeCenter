@@ -13,18 +13,27 @@ namespace HomeCenter.Config
         public static HardwareConfig FromXml(XElement element)
         {
             var obj = new HardwareConfig();
-            obj.MiHome = MiHomeConfig.FromXml(element.Element("MiHome"));
-            obj.Http = HttpConfig.FromXml(element.Element("Http"));
-            obj.Virtual = VirtualConfig.FromXml(element.Element("Virtual"));
+            if (element.Element("MiHome") != null)
+            {
+                obj.MiHome = MiHomeConfig.FromXml(element.Element("MiHome"));
+            }
+            if (element.Element("Http") != null)
+            {
+                obj.Http = HttpConfig.FromXml(element.Element("Http"));
+            }
+            if (element.Element("Virtual") != null)
+            {
+                obj.Virtual = VirtualConfig.FromXml(element.Element("Virtual"));
+            }
             return obj;
         }
 
         public XElement ToXml()
         {
             return new XElement("Configuration",
-                MiHome.ToXml(),
-                Http.ToXml(),
-                Virtual.ToXml());
+                MiHome?.ToXml(),
+                Http?.ToXml(),
+                Virtual?.ToXml());
         }
     }
 }

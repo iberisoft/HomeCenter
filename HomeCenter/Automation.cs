@@ -22,40 +22,52 @@ namespace HomeCenter
         public static async Task<bool> FindDevices(HardwareConfig config)
         {
             var modified = false;
-            foreach (var gatewayConfig in config.MiHome.Gateways)
-            {
-                var miHome = new MiHome(gatewayConfig.Password, gatewayConfig.Id);
-                m_MiHomeObjects.Add(miHome);
-                Thread.Sleep(5000);
 
-                m_Devices.Add(gatewayConfig.Name, miHome.GetGateway());
-                foreach (var device in miHome.GetDevices())
+            if (config.MiHome != null)
+            {
+                foreach (var gatewayConfig in config.MiHome.Gateways)
                 {
-                    var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
-                    if (deviceConfig == null)
+                    var miHome = new MiHome(gatewayConfig.Password, gatewayConfig.Id);
+                    m_MiHomeObjects.Add(miHome);
+                    Thread.Sleep(5000);
+
+                    m_Devices.Add(gatewayConfig.Name, miHome.GetGateway());
+                    foreach (var device in miHome.GetDevices())
                     {
-                        deviceConfig = CreateDeviceConfig(device);
-                        gatewayConfig.Devices.Add(deviceConfig);
-                        modified = true;
+                        var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
+                        if (deviceConfig == null)
+                        {
+                            deviceConfig = CreateDeviceConfig(device);
+                            gatewayConfig.Devices.Add(deviceConfig);
+                            modified = true;
+                        }
+                        m_Devices.Add(deviceConfig.Name, device);
                     }
-                    m_Devices.Add(deviceConfig.Name, device);
                 }
             }
-            foreach (var deviceConfig in config.Http.Devices)
+            if (config.Http != null)
             {
-                var device = HttpDevice.Create(deviceConfig.Type);
-                if (device != null)
+                foreach (var deviceConfig in config.Http.Devices)
                 {
-                    device.Host = deviceConfig.Host;
-                    m_Devices.Add(deviceConfig.Name, device);
+                    var device = HttpDevice.Create(deviceConfig.Type);
+                    if (device != null)
+                    {
+                        device.Host = deviceConfig.Host;
+                        m_Devices.Add(deviceConfig.Name, device);
+                    }
                 }
             }
-            foreach (var switchConfig in config.Virtual.Switches)
+
+            if (config.Virtual != null)
             {
-                var @switch = new Virtual.Switch();
-                @switch.Key = switchConfig.Key;
-                m_Devices.Add(switchConfig.Name, @switch);
+                foreach (var switchConfig in config.Virtual.Switches)
+                {
+                    var @switch = new Virtual.Switch();
+                    @switch.Key = switchConfig.Key;
+                    m_Devices.Add(switchConfig.Name, @switch);
+                }
             }
+
             return modified;
         }
 
