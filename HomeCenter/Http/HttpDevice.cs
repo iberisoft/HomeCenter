@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Net;
 
 namespace HomeCenter.Http
@@ -26,8 +27,9 @@ namespace HomeCenter.Http
             {
                 return m_WebClient.DownloadString(command);
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error(ex, "Exception occurred when connecting to {Address}", BaseAddress);
                 return null;
             }
         }
