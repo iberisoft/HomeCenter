@@ -11,12 +11,15 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using ZigbeeLib;
+using ZigbeeLib.Devices;
 
 namespace HomeCenter
 {
     static class Automation
     {
         static readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
+        static readonly List<ZigbeeSniffer> m_ZigbeeSniffers = new List<ZigbeeSniffer>();
         static readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
 
         public static async Task<bool> FindDevices(HardwareConfig config)
@@ -45,6 +48,38 @@ namespace HomeCenter
                     }
                 }
             }
+
+            if (config.Zigbee != null)
+            {
+                foreach (var snifferConfig in config.Zigbee.Sniffers)
+                {
+                    var sniffer = new ZigbeeSniffer();
+                    try
+                    {
+                        await sniffer.Connect(snifferConfig.Host, snifferConfig.Port);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "Exception occurred when connecting to Zigbee sniffer {Address}:{Port}", snifferConfig.Host, snifferConfig.Port);
+                        continue;
+                    }
+                    m_ZigbeeSniffers.Add(sniffer);
+                    Thread.Sleep(5000);
+
+                    foreach (var device in sniffer.GetDevices())
+                    {
+                        var deviceConfig = snifferConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
+                        if (deviceConfig == null)
+                        {
+                            deviceConfig = CreateDeviceConfig(device);
+                            snifferConfig.Devices.Add(deviceConfig);
+                            modified = true;
+                        }
+                        m_Devices.Add(deviceConfig.Name, device);
+                    }
+                }
+            }
+
             if (config.Http != null)
             {
                 foreach (var deviceConfig in config.Http.Devices)
@@ -77,6 +112,12 @@ namespace HomeCenter
             return new MiHomeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
+        private static ZigbeeDeviceConfig CreateDeviceConfig(ZigbeeDevice device)
+        {
+            var deviceType = device.GetType().Name;
+            return new ZigbeeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
+        }
+
         private static object GetDevice(string name)
         {
             m_Devices.TryGetValue(name, out object device);
@@ -100,6 +141,19 @@ namespace HomeCenter
             foreach (var miHome in m_MiHomeObjects)
             {
                 miHome.Dispose();
+            }
+
+            foreach (var sniffer in m_ZigbeeSniffers)
+            {
+                try
+                {
+                    await sniffer.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "Exception occurred when disconnecting from Zigbee sniffer");
+                }
+                sniffer.Dispose();
             }
         }
 
