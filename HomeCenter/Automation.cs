@@ -19,7 +19,7 @@ namespace HomeCenter
         static readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
         static readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
 
-        public static bool FindDevices(HardwareConfig config)
+        public static async Task<bool> FindDevices(HardwareConfig config)
         {
             var modified = false;
             foreach (var gatewayConfig in config.MiHome.Gateways)
@@ -83,7 +83,7 @@ namespace HomeCenter
             }
         }
 
-        public static void CloseDevices()
+        public static async Task CloseDevices()
         {
             foreach (var miHome in m_MiHomeObjects)
             {

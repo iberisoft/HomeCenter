@@ -3,6 +3,7 @@ using Serilog;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace HomeCenter
@@ -11,7 +12,7 @@ namespace HomeCenter
     {
         static readonly string m_ConfigFolderPath = AppDomain.CurrentDomain.BaseDirectory;
 
-        static void Main()
+        static async Task Main()
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.Console()
@@ -19,7 +20,7 @@ namespace HomeCenter
 
             Log.Information("Checking hardware...");
             var config = LoadHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"));
-            if (Automation.FindDevices(config))
+            if (await Automation.FindDevices(config))
             {
                 SaveHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"), config);
                 Log.Information("Hardware configuration updated");
@@ -30,7 +31,7 @@ namespace HomeCenter
             Automation.Start(automationConfig);
 
             Thread.Sleep(Timeout.Infinite);
-            Automation.CloseDevices();
+            await Automation.CloseDevices();
         }
 
         private static HardwareConfig LoadHardwareConfig(string filePath)
