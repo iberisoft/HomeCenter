@@ -149,7 +149,6 @@ namespace HomeCenter
             {
                 lock (triggerConfig)
                 {
-                    Log.Information("Calling trigger '{Trigger}'", triggerConfig);
                     foreach (var actionConfig in triggerConfig.Actions)
                     {
                         if (actionConfig.Delay > 0)
@@ -180,7 +179,10 @@ namespace HomeCenter
                     success = conditionConfig.Compare(propertyValue, conditionValue);
                 }
             }
-            Log.Information("Checking {Condition}: {Success}", conditionConfig, success);
+            if (success)
+            {
+                Log.Information("Validating condition {Condition}", conditionConfig);
+            }
             return success;
         }
 
