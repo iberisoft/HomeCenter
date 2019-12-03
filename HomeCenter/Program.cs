@@ -25,7 +25,10 @@ namespace HomeCenter
                 SaveHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"), config);
                 Log.Information("Hardware configuration updated");
             }
-            Automation.TraceDevices();
+            foreach (var name in Automation.DeviceNames)
+            {
+                Log.Information("{Name} - {Device}", name, Automation.GetDevice(name));
+            }
 
             var automationConfig = LoadAutomationConfig(Path.Combine(m_ConfigFolderPath, "Automation.xml"));
             Automation.Start(automationConfig);

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HomeCenter
 {
-    static class Automation
+    public static class Automation
     {
         static readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
         static readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
@@ -29,7 +29,7 @@ namespace HomeCenter
                 {
                     var miHome = new MiHome(gatewayConfig.Password, gatewayConfig.Id);
                     m_MiHomeObjects.Add(miHome);
-                    Thread.Sleep(5000);
+                    await Task.Delay(5000);
 
                     m_Devices.Add(gatewayConfig.Name, miHome.GetGateway());
                     foreach (var device in miHome.GetDevices())
@@ -77,7 +77,9 @@ namespace HomeCenter
             return new MiHomeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
-        private static object GetDevice(string name)
+        public static IEnumerable<string> DeviceNames => m_Devices.Keys.OrderBy(name => name);
+
+        public static object GetDevice(string name)
         {
             m_Devices.TryGetValue(name, out object device);
             if (device == null)
@@ -87,20 +89,14 @@ namespace HomeCenter
             return device;
         }
 
-        public static void TraceDevices()
-        {
-            foreach (var pair in m_Devices)
-            {
-                Log.Information("{Name} - {Device}", pair.Key, pair.Value);
-            }
-        }
-
         public static async Task CloseDevices()
         {
             foreach (var miHome in m_MiHomeObjects)
             {
                 miHome.Dispose();
             }
+
+            m_Devices.Clear();
         }
 
         public static void Start(AutomationConfig config)
