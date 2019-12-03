@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class VirtualConfig
+    public class VirtualConfig
     {
         public List<VirtualSwitchConfig> Switches { get; } = new List<VirtualSwitchConfig>();
 
@@ -22,7 +22,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class VirtualSwitchConfig
+    public class VirtualSwitchConfig
     {
         public string Name { get; set; }
 

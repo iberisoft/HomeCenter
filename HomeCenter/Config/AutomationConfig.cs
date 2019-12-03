@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class AutomationConfig
+    public class AutomationConfig
     {
         public List<TriggerConfig> Triggers { get; } = new List<TriggerConfig>();
 
@@ -17,7 +17,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class TriggerConfig
+    public class TriggerConfig
     {
         public string Name { get; set; }
 
@@ -73,7 +73,7 @@ namespace HomeCenter.Config
         public override string ToString() => Name;
     }
 
-    class EventConfig
+    public class EventConfig
     {
         public string DeviceName { get; set; }
 
@@ -103,7 +103,7 @@ namespace HomeCenter.Config
         public override string ToString() => $"{DeviceName}.{Type}";
     }
 
-    class ConditionConfig
+    public class ConditionConfig
     {
         public string DeviceName { get; set; }
 
@@ -161,7 +161,7 @@ namespace HomeCenter.Config
         public override string ToString() => $"{DeviceName}.{Property} {ComparisonAsChar} {Value}";
     }
 
-    class ActionConfig
+    public class ActionConfig
     {
         public string DeviceName { get; set; }
 

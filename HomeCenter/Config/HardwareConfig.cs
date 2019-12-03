@@ -2,7 +2,7 @@
 
 namespace HomeCenter.Config
 {
-    class HardwareConfig
+    public class HardwareConfig
     {
         public MiHomeConfig MiHome { get; set; }
 

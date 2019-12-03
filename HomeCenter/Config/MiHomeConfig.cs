@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class MiHomeConfig
+    public class MiHomeConfig
     {
         public List<MiHomeGatewayConfig> Gateways { get; } = new List<MiHomeGatewayConfig>();
 
@@ -22,7 +22,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class MiHomeGatewayConfig
+    public class MiHomeGatewayConfig
     {
         public string Name { get; set; }
 
@@ -61,7 +61,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class MiHomeDeviceConfig
+    public class MiHomeDeviceConfig
     {
         public string Name { get; set; }
 

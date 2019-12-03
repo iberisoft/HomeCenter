@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class HttpConfig
+    public class HttpConfig
     {
         public List<HttpDeviceConfig> Devices { get; } = new List<HttpDeviceConfig>();
 
@@ -22,7 +22,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class HttpDeviceConfig
+    public class HttpDeviceConfig
     {
         public string Name { get; set; }
 
