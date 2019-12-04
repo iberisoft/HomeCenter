@@ -25,7 +25,10 @@ namespace HomeCenter.Http
         {
             try
             {
-                return m_WebClient.DownloadString(command);
+                lock (m_WebClient)
+                {
+                    return m_WebClient.DownloadString(command);
+                }
             }
             catch (Exception ex)
             {
