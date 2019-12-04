@@ -11,6 +11,7 @@ namespace HomeCenter
     static class Program
     {
         static readonly string m_ConfigFolderPath = AppDomain.CurrentDomain.BaseDirectory;
+        static readonly Automation m_Automation = new Automation();
 
         static async Task Main()
         {
@@ -20,21 +21,21 @@ namespace HomeCenter
 
             Log.Information("Checking hardware...");
             var config = LoadHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"));
-            if (await Automation.FindDevices(config))
+            if (await m_Automation.FindDevices(config))
             {
                 SaveHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"), config);
                 Log.Information("Hardware configuration updated");
             }
-            foreach (var name in Automation.DeviceNames)
+            foreach (var name in m_Automation.DeviceNames)
             {
-                Log.Information("{Name} - {Device}", name, Automation.GetDevice(name));
+                Log.Information("{Name} - {Device}", name, m_Automation.GetDevice(name));
             }
 
             var automationConfig = LoadAutomationConfig(Path.Combine(m_ConfigFolderPath, "Automation.xml"));
-            Automation.Start(automationConfig);
+            m_Automation.Start(automationConfig);
 
             Thread.Sleep(Timeout.Infinite);
-            await Automation.CloseDevices();
+            await m_Automation.CloseDevices();
         }
 
         private static HardwareConfig LoadHardwareConfig(string filePath)

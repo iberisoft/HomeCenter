@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace HomeCenter
 {
-    public static class Automation
+    public class Automation
     {
-        static readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
-        static readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
+        readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
+        readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
 
-        public static async Task<bool> FindDevices(HardwareConfig config)
+        public async Task<bool> FindDevices(HardwareConfig config)
         {
             var modified = false;
 
@@ -77,9 +77,9 @@ namespace HomeCenter
             return new MiHomeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
-        public static IEnumerable<string> DeviceNames => m_Devices.Keys.OrderBy(name => name);
+        public IEnumerable<string> DeviceNames => m_Devices.Keys.OrderBy(name => name);
 
-        public static object GetDevice(string name)
+        public object GetDevice(string name)
         {
             m_Devices.TryGetValue(name, out object device);
             if (device == null)
@@ -89,17 +89,18 @@ namespace HomeCenter
             return device;
         }
 
-        public static async Task CloseDevices()
+        public async Task CloseDevices()
         {
             foreach (var miHome in m_MiHomeObjects)
             {
                 miHome.Dispose();
             }
+            await Task.Delay(1000);
 
             m_Devices.Clear();
         }
 
-        public static void Start(AutomationConfig config)
+        public void Start(AutomationConfig config)
         {
             foreach (var triggerConfig in config.Triggers)
             {
@@ -118,7 +119,7 @@ namespace HomeCenter
             }
         }
 
-        private static void SubscribeEvent(EventConfig eventConfig, Action action)
+        private void SubscribeEvent(EventConfig eventConfig, Action action)
         {
             var device = GetDevice(eventConfig.DeviceName);
             if (device != null)
@@ -139,7 +140,7 @@ namespace HomeCenter
             return Delegate.CreateDelegate(eventInfo.EventHandlerType, lambdaExpression.Compile(), "Invoke");
         }
 
-        private static void CallTrigger(TriggerConfig triggerConfig)
+        private void CallTrigger(TriggerConfig triggerConfig)
         {
             Task.Run(() =>
             {
@@ -160,7 +161,7 @@ namespace HomeCenter
             });
         }
 
-        private static bool CheckCondition(ConditionConfig conditionConfig)
+        private bool CheckCondition(ConditionConfig conditionConfig)
         {
             var success = true;
             var device = GetDevice(conditionConfig.DeviceName);
@@ -182,7 +183,7 @@ namespace HomeCenter
             return success;
         }
 
-        private static void CallAction(ActionConfig actionConfig)
+        private void CallAction(ActionConfig actionConfig)
         {
             Log.Information("Calling action {Action}", actionConfig);
             var device = GetDevice(actionConfig.DeviceName);
