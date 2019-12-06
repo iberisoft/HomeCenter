@@ -26,6 +26,8 @@ namespace HomeCenter.Config
     {
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public string Type { get; set; }
 
         public string Host { get; set; }
@@ -50,6 +52,7 @@ namespace HomeCenter.Config
         {
             var obj = new HttpDeviceConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Type = (string)element.Attribute(nameof(obj.Type));
             obj.Host = (string)element.Attribute(nameof(obj.Host));
             obj.Check();
@@ -60,6 +63,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Device",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 new XAttribute(nameof(Type), Type),
                 new XAttribute(nameof(Host), Host));
         }

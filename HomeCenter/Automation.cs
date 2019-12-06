@@ -18,6 +18,7 @@ namespace HomeCenter
     {
         readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
         readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
+        readonly Dictionary<string, string> m_DeviceDescriptions = new Dictionary<string, string>();
 
         public async Task<bool> FindDevices(HardwareConfig config)
         {
@@ -31,7 +32,7 @@ namespace HomeCenter
                     m_MiHomeObjects.Add(miHome);
                     await Task.Delay(5000);
 
-                    m_Devices.Add(gatewayConfig.Name, miHome.GetGateway());
+                    AddDevice(gatewayConfig.Name, gatewayConfig.Description, miHome.GetGateway());
                     foreach (var device in miHome.GetDevices())
                     {
                         var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
@@ -41,7 +42,7 @@ namespace HomeCenter
                             gatewayConfig.Devices.Add(deviceConfig);
                             modified = true;
                         }
-                        m_Devices.Add(deviceConfig.Name, device);
+                        AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                     }
                 }
             }
@@ -53,7 +54,7 @@ namespace HomeCenter
                     if (device != null)
                     {
                         device.Host = deviceConfig.Host;
-                        m_Devices.Add(deviceConfig.Name, device);
+                        AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                     }
                 }
             }
@@ -64,11 +65,20 @@ namespace HomeCenter
                 {
                     var @switch = new Virtual.Switch();
                     @switch.Key = switchConfig.Key;
-                    m_Devices.Add(switchConfig.Name, @switch);
+                    AddDevice(switchConfig.Name, switchConfig.Description, @switch);
                 }
             }
 
             return modified;
+        }
+
+        private void AddDevice(string name, string description, object device)
+        {
+            m_Devices.Add(name, device);
+            if (description != null)
+            {
+                m_DeviceDescriptions.Add(name, description);
+            }
         }
 
         private static MiHomeDeviceConfig CreateDeviceConfig(MiHomeDevice device)
@@ -77,9 +87,12 @@ namespace HomeCenter
             return new MiHomeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
-        public IEnumerable<string> DeviceNames => m_Devices.Keys.OrderBy(name => name);
+        public HomeConfig HomeConfig { get; set; }
 
-        public object GetDevice(string name)
+        public List<(string Name, object Device, string Description, RoomConfig Room)> DeviceInfo => m_Devices.Keys
+            .Select(name => (name, m_Devices[name], m_DeviceDescriptions[name], HomeConfig?.GetRoom(name))).ToList();
+
+        private object GetDevice(string name)
         {
             m_Devices.TryGetValue(name, out object device);
             if (device == null)
@@ -98,6 +111,7 @@ namespace HomeCenter
             await Task.Delay(1000);
 
             m_Devices.Clear();
+            m_DeviceDescriptions.Clear();
         }
 
         public void Start(AutomationConfig config)

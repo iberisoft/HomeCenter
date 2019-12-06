@@ -26,6 +26,8 @@ namespace HomeCenter.Config
     {
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         public string Id { get; set; }
 
         public string Password { get; set; }
@@ -44,6 +46,7 @@ namespace HomeCenter.Config
         {
             var obj = new MiHomeGatewayConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Id = (string)element.Attribute(nameof(obj.Id));
             obj.Password = (string)element.Attribute(nameof(obj.Password));
             obj.Devices.AddRange(element.Elements("Device").Select(element2 => MiHomeDeviceConfig.FromXml(element2)));
@@ -55,6 +58,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Gateway",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 Id != null ? new XAttribute(nameof(Id), Id) : null,
                 Password != null ? new XAttribute(nameof(Password), Password) : null,
                 Devices.Select(device => device.ToXml()));
@@ -64,6 +68,8 @@ namespace HomeCenter.Config
     public class MiHomeDeviceConfig
     {
         public string Name { get; set; }
+
+        public string Description { get; set; }
 
         public string Id { get; set; }
 
@@ -83,6 +89,7 @@ namespace HomeCenter.Config
         {
             var obj = new MiHomeDeviceConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Id = (string)element.Attribute(nameof(obj.Id));
             obj.Check();
             return obj;
@@ -92,6 +99,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Device",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 new XAttribute(nameof(Id), Id));
         }
     }
