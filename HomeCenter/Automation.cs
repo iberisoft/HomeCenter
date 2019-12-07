@@ -106,9 +106,8 @@ namespace HomeCenter
         {
             foreach (var miHome in m_MiHomeObjects)
             {
-                miHome.Dispose();
+                await Task.Run(() => miHome.Dispose());
             }
-            await Task.Delay(1000);
 
             m_Devices.Clear();
             m_DeviceDescriptions.Clear();
