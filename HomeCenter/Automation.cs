@@ -87,10 +87,7 @@ namespace HomeCenter
             return new MiHomeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
-        public HomeConfig HomeConfig { get; set; }
-
-        public List<(string Name, object Device, string Description, RoomConfig Room)> DeviceInfo => m_Devices.Keys
-            .Select(name => (name, m_Devices[name], m_DeviceDescriptions[name], HomeConfig?.GetRoom(name))).ToList();
+        public List<(string Name, object Device, string Description)> DeviceInfo => m_Devices.Keys.Select(name => (name, m_Devices[name], m_DeviceDescriptions[name])).ToList();
 
         private object GetDevice(string name)
         {
@@ -108,6 +105,7 @@ namespace HomeCenter
             {
                 await Task.Run(() => miHome.Dispose());
             }
+            m_MiHomeObjects.Clear();
 
             m_Devices.Clear();
             m_DeviceDescriptions.Clear();
@@ -132,6 +130,13 @@ namespace HomeCenter
             }
         }
 
+        public void Stop()
+        {
+            UnsubscribeEvents();
+        }
+
+        List<(EventInfo EventInfo, Delegate Handler, object Device)> m_SubscribedEvents = new List<(EventInfo EventInfo, Delegate Handler, object Device)>();
+
         private void SubscribeEvent(EventConfig eventConfig, Action action)
         {
             var device = GetDevice(eventConfig.DeviceName);
@@ -140,7 +145,9 @@ namespace HomeCenter
                 var eventInfo = device.GetType().GetEvent(eventConfig.Type);
                 if (eventInfo != null)
                 {
-                    eventInfo.AddEventHandler(device, CreateDelegate(eventInfo, action));
+                    var handler = CreateDelegate(eventInfo, action);
+                    eventInfo.AddEventHandler(device, handler);
+                    m_SubscribedEvents.Add((eventInfo, handler, device));
                 }
             }
         }
@@ -151,6 +158,15 @@ namespace HomeCenter
             var methodInfo = eventInfo.EventHandlerType.GetMethod("Invoke");
             var lambdaExpression = Expression.Lambda(actionCallExpression, methodInfo.GetParameters().Select(parameterInfo => Expression.Parameter(parameterInfo.ParameterType, "_")));
             return Delegate.CreateDelegate(eventInfo.EventHandlerType, lambdaExpression.Compile(), "Invoke");
+        }
+
+        private void UnsubscribeEvents()
+        {
+            foreach (var e in m_SubscribedEvents)
+            {
+                e.EventInfo.RemoveEventHandler(e.Device, e.Handler);
+            }
+            m_SubscribedEvents.Clear();
         }
 
         private void CallTrigger(TriggerConfig triggerConfig)
