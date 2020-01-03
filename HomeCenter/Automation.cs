@@ -35,7 +35,7 @@ namespace HomeCenter
                     AddDevice(gatewayConfig.Name, gatewayConfig.Description, miHome.GetGateway());
                     foreach (var device in miHome.GetDevices())
                     {
-                        var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
+                        var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig => deviceConfig.Id == device.Sid);
                         if (deviceConfig == null)
                         {
                             deviceConfig = CreateDeviceConfig(device);

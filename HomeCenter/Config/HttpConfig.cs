@@ -12,7 +12,7 @@ namespace HomeCenter.Config
         public static HttpConfig FromXml(XElement element)
         {
             var obj = new HttpConfig();
-            obj.Devices.AddRange(element.Elements("Device").Select(element2 => HttpDeviceConfig.FromXml(element2)));
+            obj.Devices.AddRange(element.Elements("Device").Select(element => HttpDeviceConfig.FromXml(element)));
             return obj;
         }
 

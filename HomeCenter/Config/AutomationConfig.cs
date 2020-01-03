@@ -12,7 +12,7 @@ namespace HomeCenter.Config
         public static AutomationConfig FromXml(XElement element)
         {
             var obj = new AutomationConfig();
-            obj.Triggers.AddRange(element.Elements("Trigger").Select(element2 => TriggerConfig.FromXml(element2)));
+            obj.Triggers.AddRange(element.Elements("Trigger").Select(element => TriggerConfig.FromXml(element)));
             return obj;
         }
     }
@@ -64,9 +64,9 @@ namespace HomeCenter.Config
             {
                 obj.EndTime = TimeSpan.Parse((string)element.Attribute(nameof(obj.EndTime)));
             }
-            obj.Events.AddRange(element.Elements("Event").Select(element2 => EventConfig.FromXml(element2)));
-            obj.Conditions.AddRange(element.Elements("Condition").Select(element2 => ConditionConfig.FromXml(element2)));
-            obj.Actions.AddRange(element.Elements("Action").Select(element2 => ActionConfig.FromXml(element2)));
+            obj.Events.AddRange(element.Elements("Event").Select(element => EventConfig.FromXml(element)));
+            obj.Conditions.AddRange(element.Elements("Condition").Select(element => ConditionConfig.FromXml(element)));
+            obj.Actions.AddRange(element.Elements("Action").Select(element => ActionConfig.FromXml(element)));
             return obj;
         }
 

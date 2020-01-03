@@ -12,7 +12,7 @@ namespace HomeCenter.Config
         public static VirtualConfig FromXml(XElement element)
         {
             var obj = new VirtualConfig();
-            obj.Switches.AddRange(element.Elements("Switch").Select(element2 => VirtualSwitchConfig.FromXml(element2)));
+            obj.Switches.AddRange(element.Elements("Switch").Select(element => VirtualSwitchConfig.FromXml(element)));
             return obj;
         }
 

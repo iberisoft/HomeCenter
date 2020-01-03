@@ -12,7 +12,7 @@ namespace HomeCenter.Config
         public static MiHomeConfig FromXml(XElement element)
         {
             var obj = new MiHomeConfig();
-            obj.Gateways.AddRange(element.Elements("Gateway").Select(element2 => MiHomeGatewayConfig.FromXml(element2)));
+            obj.Gateways.AddRange(element.Elements("Gateway").Select(element => MiHomeGatewayConfig.FromXml(element)));
             return obj;
         }
 
@@ -49,7 +49,7 @@ namespace HomeCenter.Config
             obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Id = (string)element.Attribute(nameof(obj.Id));
             obj.Password = (string)element.Attribute(nameof(obj.Password));
-            obj.Devices.AddRange(element.Elements("Device").Select(element2 => MiHomeDeviceConfig.FromXml(element2)));
+            obj.Devices.AddRange(element.Elements("Device").Select(element => MiHomeDeviceConfig.FromXml(element)));
             obj.Check();
             return obj;
         }

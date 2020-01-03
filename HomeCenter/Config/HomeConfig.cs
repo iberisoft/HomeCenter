@@ -14,7 +14,7 @@ namespace HomeCenter.Config
         public static HomeConfig FromXml(XElement element)
         {
             var obj = new HomeConfig();
-            obj.Rooms.AddRange(element.Elements("Room").Select(element2 => RoomConfig.FromXml(element2)));
+            obj.Rooms.AddRange(element.Elements("Room").Select(element => RoomConfig.FromXml(element)));
             return obj;
         }
     }
@@ -40,7 +40,7 @@ namespace HomeCenter.Config
             var obj = new RoomConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
             obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.DeviceNames.AddRange(element.Elements("Device").Select(element2 => (string)element2.Attribute("Name")));
+            obj.DeviceNames.AddRange(element.Elements("Device").Select(element => (string)element.Attribute("Name")));
             obj.Check();
             return obj;
         }
