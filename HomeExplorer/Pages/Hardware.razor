@@ -1,0 +1,75 @@
+﻿@page "/hardware"
+
+@inherits PageBase
+@inject AutomationService AutomationService
+
+<Heading Size="HeadingSize.Is1">Hardware</Heading>
+
+@if (AutomationService.IsBusy)
+{
+    <Paragraph>Pending...</Paragraph>
+    return;
+}
+
+@if (groups?.Count > 0)
+{
+    <Row>
+        @foreach (var group in groups.OrderBy(group => group.Key))
+        {
+            <Column ColumnSize="ColumnSize.IsHalf">
+                <Card Margin="Margin.Is4.FromBottom">
+                    @if (group.Key != null)
+                    {
+                        <CardHeader>
+                            <CardSubtitle>@group.Key</CardSubtitle>
+                        </CardHeader>
+                    }
+                    <CardBody>
+                        <Row>
+                            @foreach (var info in group.OrderBy(info => info.Description ?? info.Name))
+                            {
+                                if (GetDeviceComponentType(info.Device) != null)
+                                {
+                                    <Column ColumnSize="ColumnSize.IsHalf">
+                                        @RenderDevice(info.Device, info.Description ?? info.Name)
+                                    </Column>
+                                }
+                            }
+                        </Row>
+                    </CardBody>
+                </Card>
+            </Column>
+        }
+    </Row>
+}
+else
+{
+    <Paragraph>No device</Paragraph>
+}
+
+@code {
+    List<IGrouping<string, (string Name, object Device, string Description)>> groups;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        groups = AutomationService.GetDeviceInfo()
+            .GroupBy(info =>
+            {
+                var room = AutomationService.GetRoom(info.Name);
+                return room?.Description ?? room?.Name;
+            })
+            .ToList();
+    }
+
+    private static Type GetDeviceComponentType(object device) => Type.GetType(typeof(DeviceBase).Namespace + "." + device.GetType().Name);
+
+    private static RenderFragment RenderDevice(object device, string name) => builder =>
+    {
+        builder.OpenComponent(0, GetDeviceComponentType(device));
+        builder.AddAttribute(1, "Device", device);
+        builder.AddAttribute(2, "Name", name);
+        builder.CloseComponent();
+    };
+}

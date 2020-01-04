@@ -1,0 +1,58 @@
+﻿@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/DuplexButton86.jpg" />
+<Row>
+    <Column ColumnSize="ColumnSize.IsHalf">
+        <Text Alignment="TextAlignment.Center">
+            @Device.StatusLeft
+        </Text>
+        <DeviceEventTime EventTime="lastLeftEventTime" />
+    </Column>
+    <Column ColumnSize="ColumnSize.IsHalf">
+        <Text Alignment="TextAlignment.Center">
+            @Device.StatusRight
+        </Text>
+        <DeviceEventTime EventTime="lastRightEventTime" />
+    </Column>
+</Row>
+
+@code {
+    [Parameter]
+    public MiHomeLib.Devices.WirelessDualWallSwitch Device { get; set; }
+
+    DateTime? lastLeftEventTime;
+    DateTime? lastRightEventTime;
+
+    protected override void OnInitialized()
+    {
+        Device.OnLeftClick += OnLeftChange;
+        Device.OnLeftDoubleClick += OnLeftChange;
+        Device.OnLeftLongClick += OnLeftChange;
+        Device.OnRightClick += OnRightChange;
+        Device.OnRightDoubleClick += OnRightChange;
+        Device.OnRightLongClick += OnRightChange;
+    }
+
+    public void Dispose()
+    {
+        Device.OnLeftClick -= OnLeftChange;
+        Device.OnLeftDoubleClick -= OnLeftChange;
+        Device.OnLeftLongClick -= OnLeftChange;
+        Device.OnRightClick -= OnRightChange;
+        Device.OnRightDoubleClick -= OnRightChange;
+        Device.OnRightLongClick -= OnRightChange;
+    }
+
+    private void OnLeftChange(object _, EventArgs e)
+    {
+        lastLeftEventTime = DateTime.Now;
+        UpdateState();
+    }
+
+    private void OnRightChange(object _, EventArgs e)
+    {
+        lastRightEventTime = DateTime.Now;
+        UpdateState();
+    }
+}

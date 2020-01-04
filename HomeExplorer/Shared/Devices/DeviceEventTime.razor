@@ -1,0 +1,11 @@
+﻿@if (EventTime != null)
+{
+    <Blazorise.Text Alignment="TextAlignment.Center">
+        @EventTime.Value.ToShortTimeString()
+    </Blazorise.Text>
+}
+
+@code {
+    [Parameter]
+    public DateTime? EventTime { get; set; }
+}

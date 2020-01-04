@@ -26,7 +26,7 @@ namespace HomeCenter
                 SaveHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"), config);
                 Log.Information("Hardware configuration updated");
             }
-            foreach (var info in m_Automation.DeviceInfo)
+            foreach (var info in m_Automation.GetDeviceInfo())
             {
                 Log.Information("{Name} - {Device}", info.Name, info.Device);
             }

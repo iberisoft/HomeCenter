@@ -1,0 +1,59 @@
+﻿@using System.Timers
+
+@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/SonoffBasic.jpg" />
+@if (status)
+{
+    <Blazorise.Text Alignment="TextAlignment.Center">
+        <b>ON</b>
+    </Blazorise.Text>
+}
+else
+{
+    <Blazorise.Text Alignment="TextAlignment.Center">
+        OFF
+    </Blazorise.Text>
+}
+<Text Alignment="TextAlignment.Center">
+    <Button Color="Color.Danger" IsOutline="true" Margin="Margin.Is1.OnY" Clicked="Toggle">Toggle</Button>
+</Text>
+
+@code {
+    [Parameter]
+    public HomeCenter.Http.TasmotaRelay Device { get; set; }
+
+    bool status;
+    Timer timer = new Timer(5000);
+
+    protected override void OnInitialized()
+    {
+        status = Device.Status();
+
+        timer.Elapsed += OnTimer;
+        timer.Enabled = true;
+    }
+
+    public void Dispose()
+    {
+        timer.Elapsed -= OnTimer;
+        timer.Enabled = false;
+    }
+
+    private void OnTimer(object _, EventArgs e)
+    {
+        var newStatus = Device.Status();
+        if (status != newStatus)
+        {
+            status = newStatus;
+            UpdateState();
+        }
+    }
+
+    private void Toggle()
+    {
+        status = !status;
+        Device.Toggle();
+    }
+}

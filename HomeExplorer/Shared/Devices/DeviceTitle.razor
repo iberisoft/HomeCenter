@@ -1,0 +1,14 @@
+﻿<Text Alignment="TextAlignment.Center">
+    <Figure Size="FigureSize.Is128x128">
+        <FigureImage Source="@ImageSource" Class="figure-image-128x128" />
+        <FigureCaption>@Title</FigureCaption>
+    </Figure>
+</Text>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string ImageSource { get; set; }
+}

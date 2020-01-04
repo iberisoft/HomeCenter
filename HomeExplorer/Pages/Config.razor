@@ -1,0 +1,55 @@
+﻿@page "/config"
+
+@inherits PageBase
+@inject AutomationService AutomationService
+@inject ConfigService ConfigService
+
+<Heading Size="HeadingSize.Is1">Configuration @(ConfigService.IsModified ? "*" : "")</Heading>
+
+@if (AutomationService.IsBusy)
+{
+    <Paragraph>Pending...</Paragraph>
+    return;
+}
+
+<Button Color="Color.Primary" Margin="Margin.Is1.FromBottom" Clicked="ApplyConfig">Apply</Button>
+
+<Tabs>
+    <Tab IsActive="selectedTabIndex == 0" Clicked="() => SelectTab(0)">Hardware</Tab>
+    <Tab IsActive="selectedTabIndex == 1" Clicked="() => SelectTab(1)">Home</Tab>
+    <Tab IsActive="selectedTabIndex == 2" Clicked="() => SelectTab(2)">Automation</Tab>
+</Tabs>
+<TabsContent>
+    <TabPanel IsActive="selectedTabIndex == 0">
+        <ConfigFileEditor FileName="hardware.xml" FileSaved="UpdateState" />
+    </TabPanel>
+    <TabPanel IsActive="selectedTabIndex == 1">
+        <ConfigFileEditor FileName="home.xml" FileSaved="UpdateState" />
+    </TabPanel>
+    <TabPanel IsActive="selectedTabIndex == 2">
+        <ConfigFileEditor FileName="automation.xml" FileSaved="UpdateState" />
+    </TabPanel>
+</TabsContent>
+
+@code {
+    int selectedTabIndex;
+
+    private void SelectTab(int index)
+    {
+        selectedTabIndex = index;
+        UpdateState();
+    }
+
+    private async Task ApplyConfig()
+    {
+        if (ConfigService.IsModified)
+        {
+            if (AutomationService.IsStarted)
+            {
+                await AutomationService.StopAsync();
+                await AutomationService.StartAsync();
+            }
+            ConfigService.IsModified = false;
+        }
+    }
+}
