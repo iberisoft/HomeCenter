@@ -21,7 +21,7 @@ namespace HomeCenter
 
             Log.Information("Checking hardware...");
             var config = LoadHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"));
-            if (await m_Automation.FindDevices(config))
+            if (await m_Automation.FindDevicesAsync(config))
             {
                 SaveHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"), config);
                 Log.Information("Hardware configuration updated");
@@ -35,7 +35,7 @@ namespace HomeCenter
             m_Automation.Start(automationConfig);
 
             Thread.Sleep(Timeout.Infinite);
-            await m_Automation.CloseDevices();
+            await m_Automation.CloseDevicesAsync();
         }
 
         private static HardwareConfig LoadHardwareConfig(string filePath)

@@ -20,7 +20,7 @@ namespace HomeCenter
         readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
         readonly Dictionary<string, string> m_DeviceDescriptions = new Dictionary<string, string>();
 
-        public async Task<bool> FindDevices(HardwareConfig config)
+        public async Task<bool> FindDevicesAsync(HardwareConfig config)
         {
             var modified = false;
 
@@ -100,7 +100,7 @@ namespace HomeCenter
             return device;
         }
 
-        public async Task CloseDevices()
+        public async Task CloseDevicesAsync()
         {
             foreach (var miHome in m_MiHomeObjects)
             {
