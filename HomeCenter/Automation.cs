@@ -32,17 +32,21 @@ namespace HomeCenter
                     m_MiHomeObjects.Add(miHome);
                     await Task.Delay(5000);
 
-                    AddDevice(gatewayConfig.Name, gatewayConfig.Description, miHome.GetGateway());
-                    foreach (var device in miHome.GetDevices())
+                    var gateway = miHome.GetGateway();
+                    if (gateway != null)
                     {
-                        var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig => deviceConfig.Id == device.Sid);
-                        if (deviceConfig == null)
+                        AddDevice(gatewayConfig.Name, gatewayConfig.Description, gateway);
+                        foreach (var device in miHome.GetDevices())
                         {
-                            deviceConfig = CreateDeviceConfig(device);
-                            gatewayConfig.Devices.Add(deviceConfig);
-                            modified = true;
+                            var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig => deviceConfig.Id == device.Sid);
+                            if (deviceConfig == null)
+                            {
+                                deviceConfig = CreateDeviceConfig(device);
+                                gatewayConfig.Devices.Add(deviceConfig);
+                                modified = true;
+                            }
+                            AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                         }
-                        AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                     }
                 }
             }
