@@ -21,6 +21,6 @@
         text = value;
         ConfigService.SaveConfig(FileName, text);
         ConfigService.IsModified = true;
-        await FileSaved.InvokeAsync(EventArgs.Empty);
+        await FileSaved.InvokeAsync(null);
     }
 }
