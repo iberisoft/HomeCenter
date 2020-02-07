@@ -1,14 +1,18 @@
 ﻿@inherits DeviceBase
 
 <DeviceTitle Title="@Name" ImageSource="images/devices/MijiaGateway.jpg" />
-<Text Alignment="TextAlignment.Center">
-    <FigureImage Source="images/preferences-system-brightness-lock-icon.png" />
-    <RangeEdit Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
-</Text>
-<Text Alignment="TextAlignment.Center">
-    <FigureImage Source="images/color-pencils-icon.png" />
-    <RangeEdit Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
-</Text>
+<Row>
+    <Column>
+        <FigureImage Source="images/preferences-system-brightness-lock-icon.png" />
+        <RangeEdit Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
+    </Column>
+</Row>
+<Row>
+    <Column>
+        <FigureImage Source="images/color-pencils-icon.png" />
+        <RangeEdit Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
+    </Column>
+</Row>
 @if (status)
 {
     var style = "background: #" + colorPalette[colorIndex];
@@ -22,33 +26,33 @@ else
         OFF
     </Blazorise.Text>
 }
-<Text Alignment="TextAlignment.Center">
-    <Button Color="Color.Danger" IsOutline="true" Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
-</Text>
-<Text Alignment="TextAlignment.Center">
-    <FigureImage Source="images/music-library-icon.png" />
-    <Dropdown>
-        <DropdownToggle Color="Color.Primary" IsOutline="true">Play</DropdownToggle>
-        <DropdownMenu>
-            @for (var i = 1; i <= 8; ++i)
-            {
-                var index = i;
-                <Button Clicked="() => Device.StartPlayMusic(index)">#@index</Button>
-            }
-            @for (var i = 10; i <= 13; ++i)
-            {
-                var index = i;
-                <Button Clicked="() => Device.StartPlayMusic(index)">#@index</Button>
-            }
-            @for (var i = 20; i <= 29; ++i)
-            {
-                var index = i;
-                <Button Clicked="() => Device.StartPlayMusic(index)">#@index</Button>
-            }
-        </DropdownMenu>
-    </Dropdown>
-    <Button Color="Color.Secondary" IsOutline="true" Clicked="() => Device.StopPlayMusic()">Stop</Button>
-</Text>
+<Button Color="Color.Danger" IsOutline="true" Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
+<Row>
+    <Column>
+        <FigureImage Source="images/music-library-icon.png" />
+        <Dropdown>
+            <DropdownToggle Color="Color.Primary" IsOutline="true">Play</DropdownToggle>
+            <DropdownMenu>
+                @for (var i = 1; i <= 8; ++i)
+                {
+                    var index = i;
+                    <Button Clicked="() => Device.StartPlayMusic(index)">#@index</Button>
+                }
+                @for (var i = 10; i <= 13; ++i)
+                {
+                    var index = i;
+                    <Button Clicked="() => Device.StartPlayMusic(index)">#@index</Button>
+                }
+                @for (var i = 20; i <= 29; ++i)
+                {
+                    var index = i;
+                    <Button Clicked="() => Device.StartPlayMusic(index)">#@index</Button>
+                }
+            </DropdownMenu>
+        </Dropdown>
+        <Button Color="Color.Secondary" IsOutline="true" Clicked="() => Device.StopPlayMusic()">Stop</Button>
+    </Column>
+</Row>
 
 @code {
     [Parameter]
