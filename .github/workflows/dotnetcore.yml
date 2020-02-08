@@ -9,6 +9,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Checkout submodules
+      uses: snickerbockers/submodules-init@v4
+    - name: Create config files
+      run: |
+        echo "<Automation />" > automation.xml
+        echo "<Configuration />" > hardware.xml
+        echo "<Home />" > home.xml
+      working-directory: ./HomeExplorer/wwwroot
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
