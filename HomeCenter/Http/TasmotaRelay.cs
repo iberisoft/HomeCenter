@@ -1,23 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using Newtonsoft.Json.Linq;
 
 namespace HomeCenter.Http
 {
     public class TasmotaRelay : HttpDevice
     {
-        public bool Status
+        public bool Status()
         {
-            get
+            var result = SendCommand("");
+            if (result != null)
             {
-                var result = SendCommand("");
-                if (result != null)
-                {
-                    dynamic resultObject = JsonConvert.DeserializeObject(result);
-                    return resultObject.Power == "ON";
-                }
-                else
-                {
-                    return false;
-                }
+                return (string)JObject.Parse(result)["POWER"] == "ON";
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -34,6 +30,6 @@ namespace HomeCenter.Http
             return base.SendCommand($"cm?cmnd=power" + command);
         }
 
-        public override string ToString() => $"Status: {Status}";
+        public override string ToString() => $"Status: {Status()}";
     }
 }

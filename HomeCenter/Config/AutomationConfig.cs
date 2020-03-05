@@ -5,19 +5,19 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class AutomationConfig
+    public class AutomationConfig
     {
         public List<TriggerConfig> Triggers { get; } = new List<TriggerConfig>();
 
         public static AutomationConfig FromXml(XElement element)
         {
             var obj = new AutomationConfig();
-            obj.Triggers.AddRange(element.Elements("Trigger").Select(element2 => TriggerConfig.FromXml(element2)));
+            obj.Triggers.AddRange(element.Elements("Trigger").Select(element => TriggerConfig.FromXml(element)));
             return obj;
         }
     }
 
-    class TriggerConfig
+    public class TriggerConfig
     {
         public string Name { get; set; }
 
@@ -64,16 +64,16 @@ namespace HomeCenter.Config
             {
                 obj.EndTime = TimeSpan.Parse((string)element.Attribute(nameof(obj.EndTime)));
             }
-            obj.Events.AddRange(element.Elements("Event").Select(element2 => EventConfig.FromXml(element2)));
-            obj.Conditions.AddRange(element.Elements("Condition").Select(element2 => ConditionConfig.FromXml(element2)));
-            obj.Actions.AddRange(element.Elements("Action").Select(element2 => ActionConfig.FromXml(element2)));
+            obj.Events.AddRange(element.Elements("Event").Select(element => EventConfig.FromXml(element)));
+            obj.Conditions.AddRange(element.Elements("Condition").Select(element => ConditionConfig.FromXml(element)));
+            obj.Actions.AddRange(element.Elements("Action").Select(element => ActionConfig.FromXml(element)));
             return obj;
         }
 
         public override string ToString() => Name;
     }
 
-    class EventConfig
+    public class EventConfig
     {
         public string DeviceName { get; set; }
 
@@ -103,7 +103,7 @@ namespace HomeCenter.Config
         public override string ToString() => $"{DeviceName}.{Type}";
     }
 
-    class ConditionConfig
+    public class ConditionConfig
     {
         public string DeviceName { get; set; }
 
@@ -161,7 +161,7 @@ namespace HomeCenter.Config
         public override string ToString() => $"{DeviceName}.{Property} {ComparisonAsChar} {Value}";
     }
 
-    class ActionConfig
+    public class ActionConfig
     {
         public string DeviceName { get; set; }
 

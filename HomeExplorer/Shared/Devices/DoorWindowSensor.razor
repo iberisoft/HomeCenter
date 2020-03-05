@@ -1,0 +1,33 @@
+﻿@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/MiContactSensor.jpg" />
+<Text Alignment="TextAlignment.Center">
+    @Device.Status
+</Text>
+<DeviceEventTime EventTime="lastEventTime" />
+
+@code {
+    [Parameter]
+    public MiHomeLib.Devices.DoorWindowSensor Device { get; set; }
+
+    DateTime? lastEventTime;
+
+    protected override void OnInitialized()
+    {
+        Device.OnOpen += OnChange;
+        Device.OnClose += OnChange;
+    }
+
+    public void Dispose()
+    {
+        Device.OnOpen -= OnChange;
+        Device.OnClose -= OnChange;
+    }
+
+    private void OnChange(object _, EventArgs e)
+    {
+        lastEventTime = DateTime.Now;
+        UpdateState();
+    }
+}

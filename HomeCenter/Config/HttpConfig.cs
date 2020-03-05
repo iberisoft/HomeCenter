@@ -5,14 +5,14 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class HttpConfig
+    public class HttpConfig
     {
         public List<HttpDeviceConfig> Devices { get; } = new List<HttpDeviceConfig>();
 
         public static HttpConfig FromXml(XElement element)
         {
             var obj = new HttpConfig();
-            obj.Devices.AddRange(element.Elements("Device").Select(element2 => HttpDeviceConfig.FromXml(element2)));
+            obj.Devices.AddRange(element.Elements("Device").Select(element => HttpDeviceConfig.FromXml(element)));
             return obj;
         }
 
@@ -22,9 +22,11 @@ namespace HomeCenter.Config
         }
     }
 
-    class HttpDeviceConfig
+    public class HttpDeviceConfig
     {
         public string Name { get; set; }
+
+        public string Description { get; set; }
 
         public string Type { get; set; }
 
@@ -50,6 +52,7 @@ namespace HomeCenter.Config
         {
             var obj = new HttpDeviceConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Type = (string)element.Attribute(nameof(obj.Type));
             obj.Host = (string)element.Attribute(nameof(obj.Host));
             obj.Check();
@@ -60,6 +63,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Device",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 new XAttribute(nameof(Type), Type),
                 new XAttribute(nameof(Host), Host));
         }

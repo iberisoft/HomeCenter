@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class ZigbeeConfig
+    public class ZigbeeConfig
     {
         public List<ZigbeeSnifferConfig> Sniffers { get; } = new List<ZigbeeSnifferConfig>();
 
@@ -22,7 +22,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class ZigbeeSnifferConfig
+    public class ZigbeeSnifferConfig
     {
         public string Host { get; set; }
 
@@ -57,7 +57,7 @@ namespace HomeCenter.Config
         }
     }
 
-    class ZigbeeDeviceConfig
+    public class ZigbeeDeviceConfig
     {
         public string Name { get; set; }
 

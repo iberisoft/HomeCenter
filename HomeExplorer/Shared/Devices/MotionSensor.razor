@@ -1,0 +1,34 @@
+﻿@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/MiMotionSensor.jpg" />
+@if (motionTime != null)
+{
+    <Blazorise.Text Alignment="TextAlignment.Center">
+        motion
+    </Blazorise.Text>
+}
+<DeviceEventTime EventTime="motionTime" />
+
+@code {
+    [Parameter]
+    public MiHomeLib.Devices.MotionSensor Device { get; set; }
+
+    DateTime? motionTime;
+
+    protected override void OnInitialized()
+    {
+        Device.OnMotion += OnMotion;
+    }
+
+    public void Dispose()
+    {
+        Device.OnMotion -= OnMotion;
+    }
+
+    private void OnMotion(object _, EventArgs e)
+    {
+        motionTime = DateTime.Now;
+        UpdateState();
+    }
+}

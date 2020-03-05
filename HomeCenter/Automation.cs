@@ -16,13 +16,14 @@ using ZigbeeLib.Devices;
 
 namespace HomeCenter
 {
-    static class Automation
+    public class Automation
     {
-        static readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
-        static readonly List<ZigbeeSniffer> m_ZigbeeSniffers = new List<ZigbeeSniffer>();
-        static readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
+        readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
+        readonly List<ZigbeeSniffer> m_ZigbeeSniffers = new List<ZigbeeSniffer>();
+        readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
+        readonly Dictionary<string, string> m_DeviceDescriptions = new Dictionary<string, string>();
 
-        public static async Task<bool> FindDevices(HardwareConfig config)
+        public async Task<bool> FindDevicesAsync(HardwareConfig config)
         {
             var modified = false;
 
@@ -32,19 +33,23 @@ namespace HomeCenter
                 {
                     var miHome = new MiHome(gatewayConfig.Password, gatewayConfig.Id);
                     m_MiHomeObjects.Add(miHome);
-                    Thread.Sleep(5000);
+                    await Task.Delay(5000);
 
-                    m_Devices.Add(gatewayConfig.Name, miHome.GetGateway());
-                    foreach (var device in miHome.GetDevices())
+                    var gateway = miHome.GetGateway();
+                    if (gateway != null)
                     {
-                        var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
-                        if (deviceConfig == null)
+                        AddDevice(gatewayConfig.Name, gatewayConfig.Description, gateway);
+                        foreach (var device in miHome.GetDevices())
                         {
-                            deviceConfig = CreateDeviceConfig(device);
-                            gatewayConfig.Devices.Add(deviceConfig);
-                            modified = true;
+                            var deviceConfig = gatewayConfig.Devices.SingleOrDefault(deviceConfig => deviceConfig.Id == device.Sid);
+                            if (deviceConfig == null)
+                            {
+                                deviceConfig = CreateDeviceConfig(device);
+                                gatewayConfig.Devices.Add(deviceConfig);
+                                modified = true;
+                            }
+                            AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                         }
-                        m_Devices.Add(deviceConfig.Name, device);
                     }
                 }
             }
@@ -88,7 +93,7 @@ namespace HomeCenter
                     if (device != null)
                     {
                         device.Host = deviceConfig.Host;
-                        m_Devices.Add(deviceConfig.Name, device);
+                        AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                     }
                 }
             }
@@ -99,11 +104,20 @@ namespace HomeCenter
                 {
                     var @switch = new Virtual.Switch();
                     @switch.Key = switchConfig.Key;
-                    m_Devices.Add(switchConfig.Name, @switch);
+                    AddDevice(switchConfig.Name, switchConfig.Description, @switch);
                 }
             }
 
             return modified;
+        }
+
+        private void AddDevice(string name, string description, object device)
+        {
+            m_Devices.Add(name, device);
+            if (description != null)
+            {
+                m_DeviceDescriptions.Add(name, description);
+            }
         }
 
         private static MiHomeDeviceConfig CreateDeviceConfig(MiHomeDevice device)
@@ -118,7 +132,10 @@ namespace HomeCenter
             return new ZigbeeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
-        private static object GetDevice(string name)
+        public List<(string Name, object Device, string Description)> GetDeviceInfo() =>
+            m_Devices.Keys.Select(name => (name, m_Devices[name], m_DeviceDescriptions.TryGetValue(name, out string description) ? description : null)).ToList();
+
+        private object GetDevice(string name)
         {
             m_Devices.TryGetValue(name, out object device);
             if (device == null)
@@ -128,20 +145,13 @@ namespace HomeCenter
             return device;
         }
 
-        public static void TraceDevices()
-        {
-            foreach (var pair in m_Devices)
-            {
-                Log.Information("{Name} - {Device}", pair.Key, pair.Value);
-            }
-        }
-
-        public static async Task CloseDevices()
+        public async Task CloseDevicesAsync()
         {
             foreach (var miHome in m_MiHomeObjects)
             {
-                miHome.Dispose();
+                await Task.Run(() => miHome.Dispose());
             }
+            m_MiHomeObjects.Clear();
 
             foreach (var sniffer in m_ZigbeeSniffers)
             {
@@ -155,9 +165,12 @@ namespace HomeCenter
                 }
                 sniffer.Dispose();
             }
+
+            m_Devices.Clear();
+            m_DeviceDescriptions.Clear();
         }
 
-        public static void Start(AutomationConfig config)
+        public void Start(AutomationConfig config)
         {
             foreach (var triggerConfig in config.Triggers)
             {
@@ -176,7 +189,14 @@ namespace HomeCenter
             }
         }
 
-        private static void SubscribeEvent(EventConfig eventConfig, Action action)
+        public void Stop()
+        {
+            UnsubscribeEvents();
+        }
+
+        List<(EventInfo EventInfo, Delegate Handler, object Device)> m_SubscribedEvents = new List<(EventInfo EventInfo, Delegate Handler, object Device)>();
+
+        private void SubscribeEvent(EventConfig eventConfig, Action action)
         {
             var device = GetDevice(eventConfig.DeviceName);
             if (device != null)
@@ -184,7 +204,9 @@ namespace HomeCenter
                 var eventInfo = device.GetType().GetEvent(eventConfig.Type);
                 if (eventInfo != null)
                 {
-                    eventInfo.AddEventHandler(device, CreateDelegate(eventInfo, action));
+                    var handler = CreateDelegate(eventInfo, action);
+                    eventInfo.AddEventHandler(device, handler);
+                    m_SubscribedEvents.Add((eventInfo, handler, device));
                 }
             }
         }
@@ -197,7 +219,16 @@ namespace HomeCenter
             return Delegate.CreateDelegate(eventInfo.EventHandlerType, lambdaExpression.Compile(), "Invoke");
         }
 
-        private static void CallTrigger(TriggerConfig triggerConfig)
+        private void UnsubscribeEvents()
+        {
+            foreach (var e in m_SubscribedEvents)
+            {
+                e.EventInfo.RemoveEventHandler(e.Device, e.Handler);
+            }
+            m_SubscribedEvents.Clear();
+        }
+
+        private void CallTrigger(TriggerConfig triggerConfig)
         {
             Task.Run(() =>
             {
@@ -218,7 +249,7 @@ namespace HomeCenter
             });
         }
 
-        private static bool CheckCondition(ConditionConfig conditionConfig)
+        private bool CheckCondition(ConditionConfig conditionConfig)
         {
             var success = true;
             var device = GetDevice(conditionConfig.DeviceName);
@@ -240,7 +271,7 @@ namespace HomeCenter
             return success;
         }
 
-        private static void CallAction(ActionConfig actionConfig)
+        private void CallAction(ActionConfig actionConfig)
         {
             Log.Information("Calling action {Action}", actionConfig);
             var device = GetDevice(actionConfig.DeviceName);

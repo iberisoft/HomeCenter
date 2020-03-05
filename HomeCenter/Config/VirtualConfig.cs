@@ -5,14 +5,14 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class VirtualConfig
+    public class VirtualConfig
     {
         public List<VirtualSwitchConfig> Switches { get; } = new List<VirtualSwitchConfig>();
 
         public static VirtualConfig FromXml(XElement element)
         {
             var obj = new VirtualConfig();
-            obj.Switches.AddRange(element.Elements("Switch").Select(element2 => VirtualSwitchConfig.FromXml(element2)));
+            obj.Switches.AddRange(element.Elements("Switch").Select(element => VirtualSwitchConfig.FromXml(element)));
             return obj;
         }
 
@@ -22,9 +22,11 @@ namespace HomeCenter.Config
         }
     }
 
-    class VirtualSwitchConfig
+    public class VirtualSwitchConfig
     {
         public string Name { get; set; }
+
+        public string Description { get; set; }
 
         public ConsoleKey Key { get; set; }
 
@@ -40,6 +42,7 @@ namespace HomeCenter.Config
         {
             var obj = new VirtualSwitchConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Key = Enum.Parse<ConsoleKey>((string)element.Attribute(nameof(obj.Key)));
             obj.Check();
             return obj;
@@ -49,6 +52,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Switch",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 Key != 0 ? new XAttribute(nameof(Key), Key) : null);
         }
     }

@@ -1,0 +1,26 @@
+﻿@inject ConfigService ConfigService
+
+<MemoEdit Rows="25" Text="@text" TextChanged="Save" />
+
+@code {
+    [Parameter]
+    public string FileName { get; set; }
+
+    [Parameter]
+    public EventCallback FileSaved { get; set; }
+
+    string text;
+
+    protected override void OnInitialized()
+    {
+        text = ConfigService.LoadConfig(FileName);
+    }
+
+    private async Task Save(string value)
+    {
+        text = value;
+        ConfigService.SaveConfig(FileName, text);
+        ConfigService.IsModified = true;
+        await FileSaved.InvokeAsync(null);
+    }
+}

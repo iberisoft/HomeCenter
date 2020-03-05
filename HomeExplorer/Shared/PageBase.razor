@@ -1,0 +1,21 @@
+﻿@implements IDisposable
+@inject AutomationService AutomationService
+
+@code {
+    protected override void OnInitialized()
+    {
+        AutomationService.IsBusyChanged += IsAutomationBusyChanged;
+    }
+
+    public virtual void Dispose()
+    {
+        AutomationService.IsBusyChanged -= IsAutomationBusyChanged;
+    }
+
+    private void IsAutomationBusyChanged(object _, EventArgs e)
+    {
+        UpdateState();
+    }
+
+    protected void UpdateState() => InvokeAsync(StateHasChanged).Wait();
+}

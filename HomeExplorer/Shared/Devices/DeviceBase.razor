@@ -1,0 +1,6 @@
+﻿@code {
+    [Parameter]
+    public string Name { get; set; }
+
+    protected void UpdateState() => InvokeAsync(StateHasChanged).Wait();
+}

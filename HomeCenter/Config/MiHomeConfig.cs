@@ -5,14 +5,14 @@ using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    class MiHomeConfig
+    public class MiHomeConfig
     {
         public List<MiHomeGatewayConfig> Gateways { get; } = new List<MiHomeGatewayConfig>();
 
         public static MiHomeConfig FromXml(XElement element)
         {
             var obj = new MiHomeConfig();
-            obj.Gateways.AddRange(element.Elements("Gateway").Select(element2 => MiHomeGatewayConfig.FromXml(element2)));
+            obj.Gateways.AddRange(element.Elements("Gateway").Select(element => MiHomeGatewayConfig.FromXml(element)));
             return obj;
         }
 
@@ -22,9 +22,11 @@ namespace HomeCenter.Config
         }
     }
 
-    class MiHomeGatewayConfig
+    public class MiHomeGatewayConfig
     {
         public string Name { get; set; }
+
+        public string Description { get; set; }
 
         public string Id { get; set; }
 
@@ -44,9 +46,10 @@ namespace HomeCenter.Config
         {
             var obj = new MiHomeGatewayConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Id = (string)element.Attribute(nameof(obj.Id));
             obj.Password = (string)element.Attribute(nameof(obj.Password));
-            obj.Devices.AddRange(element.Elements("Device").Select(element2 => MiHomeDeviceConfig.FromXml(element2)));
+            obj.Devices.AddRange(element.Elements("Device").Select(element => MiHomeDeviceConfig.FromXml(element)));
             obj.Check();
             return obj;
         }
@@ -55,15 +58,18 @@ namespace HomeCenter.Config
         {
             return new XElement("Gateway",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 Id != null ? new XAttribute(nameof(Id), Id) : null,
                 Password != null ? new XAttribute(nameof(Password), Password) : null,
                 Devices.Select(device => device.ToXml()));
         }
     }
 
-    class MiHomeDeviceConfig
+    public class MiHomeDeviceConfig
     {
         public string Name { get; set; }
+
+        public string Description { get; set; }
 
         public string Id { get; set; }
 
@@ -83,6 +89,7 @@ namespace HomeCenter.Config
         {
             var obj = new MiHomeDeviceConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Id = (string)element.Attribute(nameof(obj.Id));
             obj.Check();
             return obj;
@@ -92,6 +99,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Device",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 new XAttribute(nameof(Id), Id));
         }
     }
