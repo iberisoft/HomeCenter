@@ -50,6 +50,7 @@ namespace HomeCenter
                     }
                 }
             }
+
             if (config.Http != null)
             {
                 foreach (var deviceConfig in config.Http.Devices)
