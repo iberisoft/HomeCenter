@@ -12,7 +12,7 @@ namespace HomeCenter.Config
         public static ZigbeeConfig FromXml(XElement element)
         {
             var obj = new ZigbeeConfig();
-            obj.Sniffers.AddRange(element.Elements("Sniffer").Select(element2 => ZigbeeSnifferConfig.FromXml(element2)));
+            obj.Sniffers.AddRange(element.Elements("Sniffer").Select(element => ZigbeeSnifferConfig.FromXml(element)));
             return obj;
         }
 
@@ -43,7 +43,7 @@ namespace HomeCenter.Config
             var obj = new ZigbeeSnifferConfig();
             obj.Host = (string)element.Attribute(nameof(obj.Host));
             obj.Port = (int?)element.Attribute(nameof(obj.Port));
-            obj.Devices.AddRange(element.Elements("Device").Select(element2 => ZigbeeDeviceConfig.FromXml(element2)));
+            obj.Devices.AddRange(element.Elements("Device").Select(element => ZigbeeDeviceConfig.FromXml(element)));
             obj.Check();
             return obj;
         }
@@ -60,6 +60,8 @@ namespace HomeCenter.Config
     public class ZigbeeDeviceConfig
     {
         public string Name { get; set; }
+
+        public string Description { get; set; }
 
         public string Id { get; set; }
 
@@ -79,6 +81,7 @@ namespace HomeCenter.Config
         {
             var obj = new ZigbeeDeviceConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
+            obj.Description = (string)element.Attribute(nameof(obj.Description));
             obj.Id = (string)element.Attribute(nameof(obj.Id));
             obj.Check();
             return obj;
@@ -88,6 +91,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Device",
                 new XAttribute(nameof(Name), Name),
+                Description != null ? new XAttribute(nameof(Description), Description) : null,
                 new XAttribute(nameof(Id), Id));
         }
     }

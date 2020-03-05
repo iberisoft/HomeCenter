@@ -69,18 +69,18 @@ namespace HomeCenter
                         continue;
                     }
                     m_ZigbeeSniffers.Add(sniffer);
-                    Thread.Sleep(5000);
+                    await Task.Delay(5000);
 
                     foreach (var device in sniffer.GetDevices())
                     {
-                        var deviceConfig = snifferConfig.Devices.SingleOrDefault(deviceConfig2 => deviceConfig2.Id == device.Sid);
+                        var deviceConfig = snifferConfig.Devices.SingleOrDefault(deviceConfig => deviceConfig.Id == device.Sid);
                         if (deviceConfig == null)
                         {
                             deviceConfig = CreateDeviceConfig(device);
                             snifferConfig.Devices.Add(deviceConfig);
                             modified = true;
                         }
-                        m_Devices.Add(deviceConfig.Name, device);
+                        AddDevice(deviceConfig.Name, deviceConfig.Description, device);
                     }
                 }
             }
@@ -165,6 +165,7 @@ namespace HomeCenter
                 }
                 sniffer.Dispose();
             }
+            m_ZigbeeSniffers.Clear();
 
             m_Devices.Clear();
             m_DeviceDescriptions.Clear();
