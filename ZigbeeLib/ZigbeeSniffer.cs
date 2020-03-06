@@ -84,7 +84,7 @@ namespace ZigbeeLib
             foreach (var device in JArray.Parse(payload).Where(device => (string)device["type"] == "EndDevice"))
             {
                 var sid = CreateSid((string)device["ieeeAddr"]);
-                var model = (string)device["modelId"];
+                var model = (string)device["modelID"];
                 if (deviceTypes.TryGetValue(model, out Type type))
                 {
                     m_Devices[sid] = (ZigbeeDevice)Activator.CreateInstance(type, sid);
