@@ -3,7 +3,7 @@ using System;
 
 namespace ZigbeeLib.Devices.Xiaomi
 {
-    [ZigbeeDevice("lumi.sensor_switch.aq2")]
+    [ZigbeeDevice("lumi.sensor_switch")]
     class Switch : ZigbeeDevice
     {
         public Switch(string sid)
@@ -26,6 +26,12 @@ namespace ZigbeeLib.Devices.Xiaomi
                 case "quadruple":
                     OnQuadrupleClick?.Invoke(this, EventArgs.Empty);
                     break;
+                case "long":
+                    OnLongPress?.Invoke(this, EventArgs.Empty);
+                    break;
+                case "long_release":
+                    OnLongRelease?.Invoke(this, EventArgs.Empty);
+                    break;
             }
 
             Voltage = (float?)data["voltage"] / 1000;
@@ -42,6 +48,10 @@ namespace ZigbeeLib.Devices.Xiaomi
         public event EventHandler OnTripleClick;
 
         public event EventHandler OnQuadrupleClick;
+
+        public event EventHandler OnLongPress;
+
+        public event EventHandler OnLongRelease;
 
         public override string ToString()
         {
