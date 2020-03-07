@@ -70,24 +70,17 @@ namespace ZigbeeLib
 
         private void OnDeviceListMessage(string payload)
         {
-            var deviceTypes = new Dictionary<string, Type>();
-            var deviceNamespace = typeof(ZigbeeDevice).Namespace + ".";
-            foreach (var type in GetType().Assembly.GetTypes().Where(type => type.Namespace.StartsWith(deviceNamespace)))
-            {
-                var attribute = (ZigbeeDeviceAttribute)type.GetCustomAttributes(typeof(ZigbeeDeviceAttribute), true).SingleOrDefault();
-                if (attribute != null)
-                {
-                    deviceTypes[attribute.Model] = type;
-                }
-            }
-
             foreach (var device in JArray.Parse(payload).Where(device => (string)device["type"] == "EndDevice"))
             {
                 var sid = CreateSid((string)device["ieeeAddr"]);
-                var model = (string)device["modelID"];
-                if (deviceTypes.TryGetValue(model, out Type type))
+                if (!m_Devices.ContainsKey(sid))
                 {
-                    m_Devices[sid] = (ZigbeeDevice)Activator.CreateInstance(type, sid);
+                    var model = (string)device["modelID"];
+                    var type = ZigbeeDeviceAttribute.GetDeviceType(model);
+                    if (type != null)
+                    {
+                        m_Devices[sid] = (ZigbeeDevice)Activator.CreateInstance(type, sid);
+                    }
                 }
             }
         }
