@@ -1,0 +1,35 @@
+﻿@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/MiButtonSwtich.jpg" />
+<Text Alignment="TextAlignment.Center">
+    @Device.Status
+</Text>
+<DeviceEventTime EventTime="lastEventTime" />
+
+@code {
+    [Parameter]
+    public ZigbeeLib.Devices.Xiaomi.Switch Device { get; set; }
+
+    DateTime? lastEventTime;
+
+    protected override void OnInitialized()
+    {
+        Device.OnClick += OnChange;
+        Device.OnDoubleClick += OnChange;
+        Device.OnLongPress += OnChange;
+    }
+
+    public void Dispose()
+    {
+        Device.OnClick -= OnChange;
+        Device.OnDoubleClick -= OnChange;
+        Device.OnLongPress -= OnChange;
+    }
+
+    private void OnChange(object _, EventArgs e)
+    {
+        lastEventTime = DateTime.Now;
+        UpdateState();
+    }
+}

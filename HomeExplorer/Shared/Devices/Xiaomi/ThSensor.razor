@@ -1,0 +1,29 @@
+﻿@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/MiTempHumSensor.jpg" />
+<Text Alignment="TextAlignment.Center">
+    @Device.Temperature&#x2103; @Device.Humidity%
+</Text>
+
+@code {
+    [Parameter]
+    public ZigbeeLib.Devices.Xiaomi.ThSensor Device { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Device.OnTemperatureChange += OnChange;
+        Device.OnHumidityChange += OnChange;
+    }
+
+    public void Dispose()
+    {
+        Device.OnTemperatureChange -= OnChange;
+        Device.OnHumidityChange -= OnChange;
+    }
+
+    private void OnChange(object _, EventArgs e)
+    {
+        UpdateState();
+    }
+}
