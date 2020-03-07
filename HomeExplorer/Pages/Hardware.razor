@@ -65,7 +65,12 @@ else
             .ToList();
     }
 
-    private static Type GetDeviceComponentType(object device) => Type.GetType(typeof(DeviceBase).Namespace + "." + device.GetType().Name);
+    private static Type GetDeviceComponentType(object device) =>
+        DeviceTypeToComponent(device.GetType(), typeof(MiHomeLib.Devices.MiHomeDevice)) ??
+        DeviceTypeToComponent(device.GetType(), typeof(ZigbeeLib.Devices.ZigbeeDevice));
+
+    private static Type DeviceTypeToComponent(Type deviceType, Type baseDeviceType) => deviceType.FullName.StartsWith(baseDeviceType.Namespace) ?
+        Type.GetType(deviceType.FullName.Replace(baseDeviceType.Namespace, typeof(DeviceBase).Namespace)) : null;
 
     private static RenderFragment RenderDevice(object device, string name) => builder =>
     {
