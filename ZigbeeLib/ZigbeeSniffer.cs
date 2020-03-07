@@ -34,7 +34,7 @@ namespace ZigbeeLib
         public async Task Connect(string host, int? port)
         {
             var options = new MqttClientOptionsBuilder()
-                .WithClientId(nameof(ZigbeeLib))
+                .WithClientId(Guid.NewGuid().ToString())
                 .WithTcpServer(host, port)
                 .Build();
             await m_MqttClient.ConnectAsync(options);
