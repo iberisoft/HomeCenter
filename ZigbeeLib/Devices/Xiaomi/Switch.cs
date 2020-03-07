@@ -4,7 +4,7 @@ using System;
 namespace ZigbeeLib.Devices.Xiaomi
 {
     [ZigbeeDevice("lumi.sensor_switch")]
-    class Switch : ZigbeeDevice
+    public class Switch : ZigbeeDevice
     {
         public Switch(string sid)
             : base(sid) { }
