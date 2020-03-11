@@ -66,6 +66,7 @@ else
     }
 
     private static Type GetDeviceComponentType(object device) =>
+        DeviceTypeToComponent(device.GetType(), typeof(HomeCenter.Http.HttpDevice)) ??
         DeviceTypeToComponent(device.GetType(), typeof(MiHomeLib.Devices.MiHomeDevice)) ??
         DeviceTypeToComponent(device.GetType(), typeof(ZigbeeLib.Devices.ZigbeeDevice));
 
