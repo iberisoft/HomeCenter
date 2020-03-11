@@ -103,7 +103,6 @@ namespace HomeCenter
                 foreach (var switchConfig in config.Virtual.Switches)
                 {
                     var @switch = new Virtual.Switch();
-                    @switch.Key = switchConfig.Key;
                     AddDevice(switchConfig.Name, switchConfig.Description, @switch);
                 }
             }
@@ -241,9 +240,13 @@ namespace HomeCenter
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(actionConfig.Delay));
                         }
-                        if (triggerConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
+                        if (actionConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
                         {
                             CallAction(actionConfig);
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
                 }
