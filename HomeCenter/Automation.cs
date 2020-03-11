@@ -69,7 +69,6 @@ namespace HomeCenter
                 foreach (var switchConfig in config.Virtual.Switches)
                 {
                     var @switch = new Virtual.Switch();
-                    @switch.Key = switchConfig.Key;
                     AddDevice(switchConfig.Name, switchConfig.Description, @switch);
                 }
             }

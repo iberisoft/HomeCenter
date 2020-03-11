@@ -28,8 +28,6 @@ namespace HomeCenter.Config
 
         public string Description { get; set; }
 
-        public ConsoleKey Key { get; set; }
-
         public void Check()
         {
             if (Name == null)
@@ -43,7 +41,6 @@ namespace HomeCenter.Config
             var obj = new VirtualSwitchConfig();
             obj.Name = (string)element.Attribute(nameof(obj.Name));
             obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.Key = Enum.Parse<ConsoleKey>((string)element.Attribute(nameof(obj.Key)));
             obj.Check();
             return obj;
         }
@@ -52,8 +49,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Switch",
                 new XAttribute(nameof(Name), Name),
-                Description != null ? new XAttribute(nameof(Description), Description) : null,
-                Key != 0 ? new XAttribute(nameof(Key), Key) : null);
+                Description != null ? new XAttribute(nameof(Description), Description) : null);
         }
     }
 }
