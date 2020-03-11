@@ -48,8 +48,6 @@ namespace HomeCenter.Config
 
         public List<EventConfig> Events { get; } = new List<EventConfig>();
 
-        public List<ConditionConfig> Conditions { get; } = new List<ConditionConfig>();
-
         public List<ActionConfig> Actions { get; } = new List<ActionConfig>();
 
         public static TriggerConfig FromXml(XElement element)
@@ -65,7 +63,6 @@ namespace HomeCenter.Config
                 obj.EndTime = TimeSpan.Parse((string)element.Attribute(nameof(obj.EndTime)));
             }
             obj.Events.AddRange(element.Elements("Event").Select(element => EventConfig.FromXml(element)));
-            obj.Conditions.AddRange(element.Elements("Condition").Select(element => ConditionConfig.FromXml(element)));
             obj.Actions.AddRange(element.Elements("Action").Select(element => ActionConfig.FromXml(element)));
             return obj;
         }
@@ -171,6 +168,8 @@ namespace HomeCenter.Config
 
         public float Delay { get; set; }
 
+        public List<ConditionConfig> Conditions { get; } = new List<ConditionConfig>();
+
         public void Check()
         {
             if (DeviceName == null)
@@ -194,10 +193,13 @@ namespace HomeCenter.Config
             obj.Command = (string)element.Attribute(nameof(obj.Command));
             obj.CommandData = element.Element(nameof(obj.CommandData))?.Attributes().ToDictionary(attr => attr.Name.LocalName, attr => attr.Value);
             obj.Delay = (float?)element.Attribute(nameof(obj.Delay)) ?? 0;
+            obj.Conditions.AddRange(element.Elements("Condition").Select(element => ConditionConfig.FromXml(element)));
             obj.Check();
             return obj;
         }
 
-        public override string ToString() => $"{DeviceName}.{Command}";
+        public override string ToString() => $"{DeviceName}.{Command}({CommandDataToString})";
+
+        private string CommandDataToString => CommandData != null ? string.Join(',', CommandData.Select(pair => $"{pair.Key}: {pair.Value}")) : null;
     }
 }

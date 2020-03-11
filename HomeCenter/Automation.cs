@@ -186,7 +186,7 @@ namespace HomeCenter
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(actionConfig.Delay));
                         }
-                        if (triggerConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
+                        if (actionConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
                         {
                             CallAction(actionConfig);
                         }
