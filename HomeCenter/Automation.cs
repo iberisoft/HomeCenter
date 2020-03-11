@@ -191,6 +191,10 @@ namespace HomeCenter
                         {
                             CallAction(actionConfig);
                         }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             });
