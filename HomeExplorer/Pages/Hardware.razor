@@ -14,7 +14,7 @@
 @if (groups?.Count > 0)
 {
     <Row>
-        @foreach (var group in groups.OrderBy(group => group.Key))
+        @foreach (var group in groups.Where(group => group.Any(info => GetDeviceComponentType(info.Device) != null)).OrderBy(group => group.Key))
         {
             <Column ColumnSize="ColumnSize.IsHalf">
                 <Card Margin="Margin.Is4.FromBottom">
@@ -65,7 +65,9 @@ else
             .ToList();
     }
 
-    private static Type GetDeviceComponentType(object device) => Type.GetType(typeof(DeviceBase).Namespace + "." + device.GetType().Name);
+    private static Type GetDeviceComponentType(object device) => !IsDeviceIgnored(device) ? Type.GetType(typeof(DeviceBase).Namespace + "." + device.GetType().Name) : null;
+
+    private static bool IsDeviceIgnored(object device) => device.GetType() == typeof(HomeCenter.Virtual.Switch);
 
     private static RenderFragment RenderDevice(object device, string name) => builder =>
     {
