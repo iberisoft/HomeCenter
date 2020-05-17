@@ -34,7 +34,7 @@ namespace HomeExplorer
 
             services.AddSingleton<ConfigService>();
             services.AddSingleton<AutomationService>();
-            services.AddTextSink();
+            services.AddSingleton(TextSink.Default);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +60,6 @@ namespace HomeExplorer
                 .UseFontAwesomeIcons();
 
             app.ApplicationServices.GetService<AutomationService>().Start();
-            app.UseTextSink();
 
             app.UseEndpoints(endpoints =>
             {

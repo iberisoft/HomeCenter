@@ -9,15 +9,10 @@ namespace HomeExplorer.Services
 {
     class TextSink : ILogEventSink
     {
-        readonly ITextFormatter m_TextFormatter;
+        public static TextSink Default { get; } = new TextSink();
+
+        readonly ITextFormatter m_TextFormatter = new MessageTemplateTextFormatter("{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:l}{NewLine}{Exception}", null);
         readonly StringWriter m_Output = new StringWriter();
-
-        public const string DefaultOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:l}{NewLine}{Exception}";
-
-        public TextSink(string outputTemplate = DefaultOutputTemplate, IFormatProvider formatProvider = null)
-        {
-            m_TextFormatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
-        }
 
         public void Emit(LogEvent logEvent)
         {
