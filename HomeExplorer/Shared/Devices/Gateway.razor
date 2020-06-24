@@ -4,13 +4,13 @@
 <Row>
     <Column>
         <FigureImage Source="images/preferences-system-brightness-lock-icon.png" />
-        <RangeEdit Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
+        <Slider TValue="int" Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
     </Column>
 </Row>
 <Row>
     <Column>
         <FigureImage Source="images/color-pencils-icon.png" />
-        <RangeEdit Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
+        <Slider TValue="int" Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
     </Column>
 </Row>
 @if (status)
