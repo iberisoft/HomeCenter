@@ -4,13 +4,13 @@
 <Row>
     <Column>
         <FigureImage Source="images/preferences-system-brightness-lock-icon.png" />
-        <RangeEdit Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
+        <Slider TValue="int" Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
     </Column>
 </Row>
 <Row>
     <Column>
         <FigureImage Source="images/color-pencils-icon.png" />
-        <RangeEdit Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
+        <Slider TValue="int" Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
     </Column>
 </Row>
 @if (status)
@@ -26,12 +26,12 @@ else
         OFF
     </Blazorise.Text>
 }
-<Button Color="Color.Danger" IsOutline="true" Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
+<Button Color="Color.Danger" Outline="true" Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
 <Row>
     <Column>
         <FigureImage Source="images/music-library-icon.png" />
         <Dropdown>
-            <DropdownToggle Color="Color.Primary" IsOutline="true">Play</DropdownToggle>
+            <DropdownToggle Color="Color.Primary" Outline="true">Play</DropdownToggle>
             <DropdownMenu>
                 @for (var i = 1; i <= 8; ++i)
                 {
@@ -50,7 +50,7 @@ else
                 }
             </DropdownMenu>
         </Dropdown>
-        <Button Color="Color.Secondary" IsOutline="true" Clicked="() => Device.StopPlayMusic()">Stop</Button>
+        <Button Color="Color.Secondary" Outline="true" Clicked="() => Device.StopPlayMusic()">Stop</Button>
     </Column>
 </Row>
 
