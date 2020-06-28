@@ -25,7 +25,7 @@ namespace HomeCenter.Http
         {
             if (command != "")
                 command = "?turn=" + command;
-            return base.SendCommand($"relay/0" + command);
+            return base.SendCommand("relay/0" + command);
         }
 
         public override string ToString() => $"Status: {Status()}";
