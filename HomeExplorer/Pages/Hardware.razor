@@ -66,12 +66,12 @@ else
     }
 
     private static Type GetDeviceComponentType(object device) =>
-        DeviceTypeToComponent(device.GetType(), typeof(HomeCenter.Http.HttpDevice)) ??
-        DeviceTypeToComponent(device.GetType(), typeof(MiHomeLib.Devices.MiHomeDevice)) ??
-        DeviceTypeToComponent(device.GetType(), typeof(ZigbeeLib.Devices.ZigbeeDevice));
+        DeviceTypeToComponent(device.GetType(), "HomeCenter", typeof(DeviceBase).Namespace) ??
+        DeviceTypeToComponent(device.GetType(), "MiHomeLib.Devices", typeof(DeviceBase).Namespace + ".MiHome") ??
+        DeviceTypeToComponent(device.GetType(), "ZigbeeLib.Devices", typeof(DeviceBase).Namespace);
 
-    private static Type DeviceTypeToComponent(Type deviceType, Type baseDeviceType) => deviceType.FullName.StartsWith(baseDeviceType.Namespace) ?
-        Type.GetType(deviceType.FullName.Replace(baseDeviceType.Namespace, typeof(DeviceBase).Namespace)) : null;
+    private static Type DeviceTypeToComponent(Type deviceType, string deviceNamespace, string componentNamespace) => deviceType.FullName.StartsWith(deviceNamespace) ?
+        Type.GetType(deviceType.FullName.Replace(deviceNamespace, componentNamespace)) : null;
 
     private static RenderFragment RenderDevice(object device, string name) => builder =>
     {
