@@ -1,12 +1,8 @@
-﻿using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Client.Options;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ZigbeeLib.Devices;
 
@@ -14,57 +10,50 @@ namespace ZigbeeLib
 {
     public class ZigbeeSniffer : IDisposable
     {
-        IMqttClient m_MqttClient;
+        NetClient m_NetClient;
 
         public ZigbeeSniffer()
         {
-            m_MqttClient = new MqttFactory().CreateMqttClient();
-            m_MqttClient.UseApplicationMessageReceivedHandler(e => OnMessage(e));
+            m_NetClient = new NetClient("zigbee2mqtt");
+            m_NetClient.MessageReceived += NetClient_MessageReceived;
         }
 
         public void Dispose()
         {
-            if (m_MqttClient != null)
+            if (m_NetClient != null)
             {
-                m_MqttClient.Dispose();
-                m_MqttClient = null;
+                m_NetClient.Dispose();
+                m_NetClient = null;
             }
         }
 
         public async Task Connect(string host, int? port)
         {
-            var options = new MqttClientOptionsBuilder()
-                .WithClientId(Guid.NewGuid().ToString())
-                .WithTcpServer(host, port)
-                .Build();
-            await m_MqttClient.ConnectAsync(options);
+            await m_NetClient.StartAsync(host, port);
 
-            await m_MqttClient.SubscribeAsync("zigbee2mqtt/bridge/config/devices");
-            await m_MqttClient.SubscribeAsync("zigbee2mqtt/+");
-
-            await m_MqttClient.PublishAsync("zigbee2mqtt/bridge/config/devices/get");
+            await m_NetClient.SubscribeAsync("bridge/config/devices");
+            await m_NetClient.SubscribeAsync("+");
+            await m_NetClient.PublishAsync("bridge/config/devices/get");
         }
 
         public async Task Disconnect()
         {
-            await m_MqttClient.DisconnectAsync();
+            await m_NetClient.StopAsync();
         }
 
         ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new ConcurrentDictionary<string, ZigbeeDevice>();
 
         public IEnumerable<ZigbeeDevice> GetDevices() => m_Devices.Values;
 
-        private void OnMessage(MqttApplicationMessageReceivedEventArgs e)
+        private void NetClient_MessageReceived(object sender, NetClient.Message e)
         {
-            var topic = e.ApplicationMessage.Topic;
-            var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-            if (topic == "zigbee2mqtt/bridge/config/devices")
+            if (e.Topic == "bridge/config/devices")
             {
-                OnDeviceListMessage(payload);
+                OnDeviceListMessage(e.Payload);
             }
             else
             {
-                OnDeviceEventMessage(topic, payload);
+                OnDeviceEventMessage(e.Topic, e.Payload);
             }
         }
 
