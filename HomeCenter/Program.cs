@@ -26,6 +26,7 @@ namespace HomeCenter
                 SaveHardwareConfig(Path.Combine(m_ConfigFolderPath, "Hardware.xml"), config);
                 Log.Information("Hardware configuration updated");
             }
+            await Task.Delay(1000);
             foreach (var info in m_Automation.GetDeviceInfo())
             {
                 Log.Information("{Name} - {Device}", info.Name, info.Device);
@@ -34,7 +35,10 @@ namespace HomeCenter
             var automationConfig = LoadAutomationConfig(Path.Combine(m_ConfigFolderPath, "Automation.xml"));
             m_Automation.Start(automationConfig);
 
-            Thread.Sleep(Timeout.Infinite);
+            Console.WriteLine("Press any key...");
+            Console.ReadKey(true);
+
+            Log.Information("Closing...");
             await m_Automation.CloseDevicesAsync();
         }
 

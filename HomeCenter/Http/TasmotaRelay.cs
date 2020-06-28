@@ -27,7 +27,7 @@ namespace HomeCenter.Http
         {
             if (command != "")
                 command = "%20" + command;
-            return base.SendCommand($"cm?cmnd=power" + command);
+            return base.SendCommand("cm?cmnd=power" + command);
         }
 
         public override string ToString() => $"Status: {Status()}";
