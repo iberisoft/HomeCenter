@@ -84,6 +84,6 @@ namespace ZigbeeLib
             }
         }
 
-        private static string CreateSid(string addr) => addr.Substring(addr.IndexOf("/0x") + 3).TrimStart('0');
+        private static string CreateSid(string addr) => addr.Substring(2).TrimStart('0');
     }
 }
