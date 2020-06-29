@@ -44,6 +44,8 @@ namespace ZigbeeLib
             await m_MqttClient.StopAsync();
         }
 
+        public bool IsConnected => m_MqttClient.IsConnected;
+
         public async Task SubscribeAsync(string topic)
         {
             topic = GetFullTopic(topic);
