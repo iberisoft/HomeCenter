@@ -35,7 +35,6 @@ namespace HomeCenter
             var automationConfig = LoadAutomationConfig(Path.Combine(m_ConfigFolderPath, "Automation.xml"));
             m_Automation.Start(automationConfig);
 
-            Console.WriteLine("Press any key...");
             Console.ReadKey(true);
 
             Log.Information("Closing...");
