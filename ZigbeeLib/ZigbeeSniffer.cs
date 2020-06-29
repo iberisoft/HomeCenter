@@ -33,6 +33,7 @@ namespace ZigbeeLib
 
             await m_NetClient.SubscribeAsync("bridge/config/devices");
             await m_NetClient.SubscribeAsync("+");
+            await Task.Delay(100);
             await m_NetClient.PublishAsync("bridge/config/devices/get");
         }
 
