@@ -42,8 +42,9 @@ namespace ZigbeeLib
         }
 
         ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new ConcurrentDictionary<string, ZigbeeDevice>();
+        TaskCompletionSource<IEnumerable<ZigbeeDevice>> m_DevicesSource = new TaskCompletionSource<IEnumerable<ZigbeeDevice>>();
 
-        public IEnumerable<ZigbeeDevice> GetDevices() => m_Devices.Values;
+        public async Task<IEnumerable<ZigbeeDevice>> GetDevices() => await m_DevicesSource.Task;
 
         private void NetClient_MessageReceived(object sender, NetClient.Message e)
         {
@@ -72,6 +73,7 @@ namespace ZigbeeLib
                     }
                 }
             }
+            m_DevicesSource.SetResult(m_Devices.Values);
         }
 
         private void OnDeviceEventMessage(string topic, string payload)

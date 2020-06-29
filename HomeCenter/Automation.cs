@@ -69,9 +69,8 @@ namespace HomeCenter
                         continue;
                     }
                     m_ZigbeeSniffers.Add(sniffer);
-                    await Task.Delay(5000);
 
-                    foreach (var device in sniffer.GetDevices())
+                    foreach (var device in await sniffer.GetDevices())
                     {
                         var deviceConfig = snifferConfig.Devices.SingleOrDefault(deviceConfig => deviceConfig.Id == device.Sid);
                         if (deviceConfig == null)
