@@ -12,11 +12,16 @@ namespace ZigbeeLib
     {
         IManagedMqttClient m_MqttClient;
 
-        public NetClient(string baseTopic)
+        public NetClient()
         {
-            BaseTopic = baseTopic;
             m_MqttClient = new MqttFactory().CreateManagedMqttClient();
             m_MqttClient.UseApplicationMessageReceivedHandler(e => MessageReceivedHandler(e));
+        }
+
+        public NetClient(string baseTopic)
+            : this()
+        {
+            BaseTopic = baseTopic;
         }
 
         public void Dispose()
@@ -74,9 +79,10 @@ namespace ZigbeeLib
 
         public event EventHandler<Message> MessageReceived;
 
-        private string GetFullTopic(string topic) => $"{BaseTopic}/{topic}";
+        private string GetFullTopic(string topic) => string.IsNullOrWhiteSpace(BaseTopic) ? topic : $"{BaseTopic}/{topic}";
 
-        private string GetSubTopic(string topic) => topic.StartsWith(BaseTopic) ? topic.Substring(BaseTopic.Length).TrimStart('/') : throw new ArgumentException("Wrong topic", nameof(topic));
+        private string GetSubTopic(string topic) => string.IsNullOrWhiteSpace(BaseTopic) ? topic :
+            topic.StartsWith(BaseTopic) ? topic.Substring(BaseTopic.Length).TrimStart('/') : throw new ArgumentException("Wrong topic", nameof(topic));
 
         public class Message
         {
