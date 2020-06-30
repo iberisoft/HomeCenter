@@ -6,7 +6,7 @@ namespace HomeCenter.Config
     {
         public MiHomeConfig MiHome { get; set; }
 
-        public ZigbeeConfig Zigbee { get; set; }
+        public MqttConfig Mqtt { get; set; }
 
         public HttpConfig Http { get; set; }
 
@@ -19,9 +19,9 @@ namespace HomeCenter.Config
             {
                 obj.MiHome = MiHomeConfig.FromXml(element.Element("MiHome"));
             }
-            if (element.Element("Zigbee") != null)
+            if (element.Element("Mqtt") != null)
             {
-                obj.Zigbee = ZigbeeConfig.FromXml(element.Element("Zigbee"));
+                obj.Mqtt = MqttConfig.FromXml(element.Element("Mqtt"));
             }
             if (element.Element("Http") != null)
             {
@@ -38,7 +38,7 @@ namespace HomeCenter.Config
         {
             return new XElement("Configuration",
                 MiHome?.ToXml(),
-                Zigbee?.ToXml(),
+                Mqtt?.ToXml(),
                 Http?.ToXml(),
                 Virtual?.ToXml());
         }

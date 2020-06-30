@@ -1,5 +1,6 @@
 ﻿using HomeCenter.Config;
 using HomeCenter.Http;
+using HomeCenter.Mqtt;
 using MiHomeLib;
 using MiHomeLib.Devices;
 using Serilog;
@@ -20,6 +21,7 @@ namespace HomeCenter
     {
         readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
         readonly List<ZigbeeSniffer> m_ZigbeeSniffers = new List<ZigbeeSniffer>();
+        readonly List<MqttBroker> m_MqttBrokers = new List<MqttBroker>();
         readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
         readonly Dictionary<string, string> m_DeviceDescriptions = new Dictionary<string, string>();
 
@@ -54,20 +56,12 @@ namespace HomeCenter
                 }
             }
 
-            if (config.Zigbee != null)
+            if (config.Mqtt != null)
             {
-                foreach (var snifferConfig in config.Zigbee.Sniffers)
+                foreach (var snifferConfig in config.Mqtt.ZigbeeSniffers)
                 {
                     var sniffer = new ZigbeeSniffer();
-                    try
-                    {
-                        await sniffer.Connect(snifferConfig.Host, snifferConfig.Port);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "Exception occurred when connecting to Zigbee sniffer {Address}:{Port}", snifferConfig.Host, snifferConfig.Port);
-                        continue;
-                    }
+                    await sniffer.Connect(snifferConfig.Host, snifferConfig.Port);
                     m_ZigbeeSniffers.Add(sniffer);
 
                     foreach (var device in await sniffer.GetDevices())
@@ -80,6 +74,23 @@ namespace HomeCenter
                             modified = true;
                         }
                         AddDevice(deviceConfig.Name, deviceConfig.Description, device);
+                    }
+                }
+
+                foreach (var brokerConfig in config.Mqtt.Brokers)
+                {
+                    var broker = new MqttBroker();
+                    await broker.Connect(brokerConfig.Host, brokerConfig.Port);
+                    m_MqttBrokers.Add(broker);
+
+                    foreach (var deviceConfig in brokerConfig.Devices)
+                    {
+                        var device = MqttDevice.Create(deviceConfig.Type, deviceConfig.Id);
+                        if (device != null)
+                        {
+                            await broker.AddDevice(device);
+                            AddDevice(deviceConfig.Name, deviceConfig.Description, device);
+                        }
                     }
                 }
             }
@@ -154,17 +165,17 @@ namespace HomeCenter
 
             foreach (var sniffer in m_ZigbeeSniffers)
             {
-                try
-                {
-                    await sniffer.Disconnect();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex, "Exception occurred when disconnecting from Zigbee sniffer");
-                }
+                await sniffer.Disconnect();
                 sniffer.Dispose();
             }
             m_ZigbeeSniffers.Clear();
+
+            foreach (var broker in m_MqttBrokers)
+            {
+                await broker.Disconnect();
+                broker.Dispose();
+            }
+            m_MqttBrokers.Clear();
 
             m_Devices.Clear();
             m_DeviceDescriptions.Clear();

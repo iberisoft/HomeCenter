@@ -1,0 +1,42 @@
+﻿@inherits DeviceBase
+@implements IDisposable
+
+<DeviceTitle Title="@Name" ImageSource="images/devices/SonoffBasic.jpg" />
+@if (Device.Status)
+{
+    <Blazorise.Text Alignment="TextAlignment.Center">
+        <b>ON</b>
+    </Blazorise.Text>
+}
+else
+{
+    <Blazorise.Text Alignment="TextAlignment.Center">
+        OFF
+    </Blazorise.Text>
+}
+<Button Color="Color.Danger" Outline="true" Margin="Margin.Is1.OnY" Clicked="Toggle">Toggle</Button>
+
+@code {
+    [Parameter]
+    public HomeCenter.Mqtt.TasmotaRelay Device { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Device.OnStatusChange += OnChange;
+    }
+
+    public void Dispose()
+    {
+        Device.OnStatusChange -= OnChange;
+    }
+
+    private void OnChange(object _, EventArgs e)
+    {
+        UpdateState();
+    }
+
+    private async Task Toggle()
+    {
+        await Device.Toggle();
+    }
+}
