@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Threading.Tasks;
 
 namespace ZigbeeLib.Devices
 {
@@ -12,5 +14,7 @@ namespace ZigbeeLib.Devices
         public string Sid { get; }
 
         public abstract void ParseData(JObject data);
+
+        public Func<JObject, Task> SendMessage { get; set; }
     }
 }
