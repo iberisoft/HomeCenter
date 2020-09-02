@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MqttHelper;
+using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
-using ZigbeeLib;
 
 namespace HomeCenter.Mqtt
 {
@@ -50,7 +50,7 @@ namespace HomeCenter.Mqtt
             await device.Initialize();
         }
 
-        private void NetClient_MessageReceived(object sender, NetClient.Message e)
+        private void NetClient_MessageReceived(object sender, NetMessage e)
         {
             foreach (var device in m_Devices.Where(device => device.SupportsTopic(e.Topic)))
             {

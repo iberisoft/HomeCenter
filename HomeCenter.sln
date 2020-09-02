@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiHomeLib", "MiHome\MiHomeL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeCenter", "HomeCenter\HomeCenter.csproj", "{81622E0F-3AD9-4BA7-8A11-DC73D2A3B043}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeExplorer", "HomeExplorer\HomeExplorer.csproj", "{6BC7CD6B-343F-4EA7-856B-212791B2FBF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeExplorer", "HomeExplorer\HomeExplorer.csproj", "{6BC7CD6B-343F-4EA7-856B-212791B2FBF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigbeeLib", "ZigbeeLib\ZigbeeLib.csproj", "{8D021F6A-3528-4D03-9321-7D1D6D692B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigbeeLib", "ZigbeeLib\ZigbeeLib.csproj", "{8D021F6A-3528-4D03-9321-7D1D6D692B7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttHelper", "MqttHelper\MqttHelper\MqttHelper.csproj", "{71B35826-A88D-455B-BA98-6E7A36289C83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{8D021F6A-3528-4D03-9321-7D1D6D692B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D021F6A-3528-4D03-9321-7D1D6D692B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D021F6A-3528-4D03-9321-7D1D6D692B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71B35826-A88D-455B-BA98-6E7A36289C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71B35826-A88D-455B-BA98-6E7A36289C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71B35826-A88D-455B-BA98-6E7A36289C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71B35826-A88D-455B-BA98-6E7A36289C83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

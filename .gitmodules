@@ -1,3 +1,6 @@
 [submodule "MiHome"]
 	path = MiHome
 	url = https://github.com/iberisoft/mi-home
+[submodule "MqttHelper"]
+	path = MqttHelper
+	url = https://github.com/iberisoft/MqttHelper

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MiHome\MiHomeLib\MiHomeLib.csproj" />
+    <ProjectReference Include="..\MqttHelper\MqttHelper\MqttHelper.csproj" />
     <ProjectReference Include="..\ZigbeeLib\ZigbeeLib.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using MqttHelper;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace ZigbeeLib
 
         public async Task<IEnumerable<ZigbeeDevice>> GetDevices() => m_NetClient.IsConnected ? await m_DevicesSource.Task : Enumerable.Empty<ZigbeeDevice>();
 
-        private void NetClient_MessageReceived(object sender, NetClient.Message e)
+        private void NetClient_MessageReceived(object sender, NetMessage e)
         {
             if (e.Topic == "bridge/config/devices")
             {
