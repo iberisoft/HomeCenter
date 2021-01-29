@@ -46,7 +46,7 @@ namespace ZigbeeLib
         ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new ConcurrentDictionary<string, ZigbeeDevice>();
         TaskCompletionSource<IEnumerable<ZigbeeDevice>> m_DevicesSource = new TaskCompletionSource<IEnumerable<ZigbeeDevice>>();
 
-        public async Task<IEnumerable<ZigbeeDevice>> GetDevices() => m_NetClient.IsConnected ? await m_DevicesSource.Task : Enumerable.Empty<ZigbeeDevice>();
+        public async Task<IEnumerable<ZigbeeDevice>> GetDevices() => await m_DevicesSource.Task;
 
         private void NetClient_MessageReceived(object sender, NetMessage e)
         {
