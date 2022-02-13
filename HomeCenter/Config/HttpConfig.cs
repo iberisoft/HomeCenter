@@ -1,28 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    public class HttpConfig
+    public class HttpConfig : IValidator
     {
-        public List<HttpDeviceConfig> Devices { get; } = new List<HttpDeviceConfig>();
+        public List<HttpDeviceConfig> Devices { get; set; } = new List<HttpDeviceConfig>();
 
-        public static HttpConfig FromXml(XElement element)
+        public void Validate()
         {
-            var obj = new HttpConfig();
-            obj.Devices.AddRange(element.Elements("Device").Select(element => HttpDeviceConfig.FromXml(element)));
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("Http", Devices.Select(device => device.ToXml()));
+            foreach (var deviceConfig in Devices)
+            {
+                deviceConfig.Validate();
+            }
         }
     }
 
-    public class HttpDeviceConfig
+    public class HttpDeviceConfig : IValidator
     {
         public string Name { get; set; }
 
@@ -32,7 +26,7 @@ namespace HomeCenter.Config
 
         public string Host { get; set; }
 
-        public void Check()
+        public void Validate()
         {
             if (Name == null)
             {
@@ -46,26 +40,6 @@ namespace HomeCenter.Config
             {
                 throw new InvalidOperationException($"{nameof(Host)} is null");
             }
-        }
-
-        public static HttpDeviceConfig FromXml(XElement element)
-        {
-            var obj = new HttpDeviceConfig();
-            obj.Name = (string)element.Attribute(nameof(obj.Name));
-            obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.Type = (string)element.Attribute(nameof(obj.Type));
-            obj.Host = (string)element.Attribute(nameof(obj.Host));
-            obj.Check();
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("Device",
-                new XAttribute(nameof(Name), Name),
-                Description != null ? new XAttribute(nameof(Description), Description) : null,
-                new XAttribute(nameof(Type), Type),
-                new XAttribute(nameof(Host), Host));
         }
     }
 }

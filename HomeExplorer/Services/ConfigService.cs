@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using System;
 using System.IO;
-using System.Xml.Linq;
 
 namespace HomeExplorer.Services
 {
@@ -24,23 +23,14 @@ namespace HomeExplorer.Services
 
         public bool IsModified { get; set; }
 
-        public HardwareConfig LoadHardwareConfig(string fileName) => LoadConfig(fileName, element => HardwareConfig.FromXml(element));
-
-        public HomeConfig LoadHomeConfig(string fileName) => LoadConfig(fileName, element => HomeConfig.FromXml(element));
-
-        public AutomationConfig LoadAutomationConfig(string fileName) => LoadConfig(fileName, element => AutomationConfig.FromXml(element));
-
-        public void SaveHardwareConfig(string fileName, HardwareConfig config) => SaveConfig(fileName, config, config => config.ToXml());
-
-        private T LoadConfig<T>(string fileName, Func<XElement, T> fromXml)
-            where T : new()
+        public T LoadConfig<T>(string fileName)
+            where T : IValidator, new()
         {
             if (File.Exists(ConfigFilePath(fileName)))
             {
                 try
                 {
-                    var document = XDocument.Load(ConfigFilePath(fileName));
-                    return fromXml(document.Root);
+                    return ConfigFile.Load<T>(ConfigFilePath(fileName));
                 }
                 catch (Exception ex)
                 {
@@ -54,12 +44,11 @@ namespace HomeExplorer.Services
             return new T();
         }
 
-        private void SaveConfig<T>(string fileName, T config, Func<T, XElement> toXml)
+        public void SaveConfig<T>(string fileName, T config)
         {
             try
             {
-                var document = new XDocument(toXml(config));
-                document.Save(ConfigFilePath(fileName));
+                ConfigFile.Save(ConfigFilePath(fileName), config);
             }
             catch (Exception ex)
             {

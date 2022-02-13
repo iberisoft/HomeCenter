@@ -33,12 +33,14 @@ namespace HomeExplorer.Services
             Log.Information("Starting service...");
             await DoWork(async () =>
             {
-                var hardwareConfig = m_ConfigService.LoadHardwareConfig("hardware.xml");
+                Log.Information("Checking hardware...");
+                var hardwareConfig = m_ConfigService.LoadConfig<HardwareConfig>("hardware.yml");
                 if (await m_Automation.FindDevicesAsync(hardwareConfig))
                 {
-                    m_ConfigService.SaveHardwareConfig("hardware.xml", hardwareConfig);
+                    m_ConfigService.SaveConfig("hardware.yml", hardwareConfig);
                     Log.Information("Hardware configuration updated");
                 }
+                await Task.Delay(1000);
 
                 var deviceInfo = m_Automation.GetDeviceInfo();
                 Log.Information("Found devices: {Count}", deviceInfo.Count);
@@ -47,11 +49,11 @@ namespace HomeExplorer.Services
                     Log.Information("{Name} - {Device}", info.Name, info.Device);
                 }
 
-                var automationConfig = m_ConfigService.LoadAutomationConfig("automation.xml");
+                var automationConfig = m_ConfigService.LoadConfig<AutomationConfig>("automation.yml");
                 m_Automation.Start(automationConfig);
                 IsStarted = true;
 
-                m_HomeConfig = m_ConfigService.LoadHomeConfig("home.xml");
+                m_HomeConfig = m_ConfigService.LoadConfig<HomeConfig>("home.yml");
             });
             Log.Information("Service has started");
         }

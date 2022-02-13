@@ -1,28 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    public class MiHomeConfig
+    public class MiHomeConfig : IValidator
     {
-        public List<MiHomeGatewayConfig> Gateways { get; } = new List<MiHomeGatewayConfig>();
+        public List<MiHomeGatewayConfig> Gateways { get; set; } = new List<MiHomeGatewayConfig>();
 
-        public static MiHomeConfig FromXml(XElement element)
+        public void Validate()
         {
-            var obj = new MiHomeConfig();
-            obj.Gateways.AddRange(element.Elements("Gateway").Select(element => MiHomeGatewayConfig.FromXml(element)));
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("MiHome", Gateways.Select(gateway => gateway.ToXml()));
+            foreach (var gatewayConfig in Gateways)
+            {
+                gatewayConfig.Validate();
+            }
         }
     }
 
-    public class MiHomeGatewayConfig
+    public class MiHomeGatewayConfig : IValidator
     {
         public string Name { get; set; }
 
@@ -32,40 +26,22 @@ namespace HomeCenter.Config
 
         public string Password { get; set; }
 
-        public List<MiHomeDeviceConfig> Devices { get; } = new List<MiHomeDeviceConfig>();
+        public List<MiHomeDeviceConfig> Devices { get; set; } = new List<MiHomeDeviceConfig>();
 
-        public void Check()
+        public void Validate()
         {
             if (Name == null)
             {
                 throw new InvalidOperationException($"{nameof(Name)} is null");
             }
-        }
-
-        public static MiHomeGatewayConfig FromXml(XElement element)
-        {
-            var obj = new MiHomeGatewayConfig();
-            obj.Name = (string)element.Attribute(nameof(obj.Name));
-            obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.Id = (string)element.Attribute(nameof(obj.Id));
-            obj.Password = (string)element.Attribute(nameof(obj.Password));
-            obj.Devices.AddRange(element.Elements("Device").Select(element => MiHomeDeviceConfig.FromXml(element)));
-            obj.Check();
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("Gateway",
-                new XAttribute(nameof(Name), Name),
-                Description != null ? new XAttribute(nameof(Description), Description) : null,
-                Id != null ? new XAttribute(nameof(Id), Id) : null,
-                Password != null ? new XAttribute(nameof(Password), Password) : null,
-                Devices.Select(device => device.ToXml()));
+            foreach (var deviceConfig in Devices)
+            {
+                deviceConfig.Validate();
+            }
         }
     }
 
-    public class MiHomeDeviceConfig
+    public class MiHomeDeviceConfig : IValidator
     {
         public string Name { get; set; }
 
@@ -73,7 +49,7 @@ namespace HomeCenter.Config
 
         public string Id { get; set; }
 
-        public void Check()
+        public void Validate()
         {
             if (Name == null)
             {
@@ -83,24 +59,6 @@ namespace HomeCenter.Config
             {
                 throw new InvalidOperationException($"{nameof(Id)} is null");
             }
-        }
-
-        public static MiHomeDeviceConfig FromXml(XElement element)
-        {
-            var obj = new MiHomeDeviceConfig();
-            obj.Name = (string)element.Attribute(nameof(obj.Name));
-            obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.Id = (string)element.Attribute(nameof(obj.Id));
-            obj.Check();
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("Device",
-                new XAttribute(nameof(Name), Name),
-                Description != null ? new XAttribute(nameof(Description), Description) : null,
-                new XAttribute(nameof(Id), Id));
         }
     }
 }

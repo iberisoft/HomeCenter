@@ -1,28 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    public class VirtualConfig
+    public class VirtualConfig : IValidator
     {
-        public List<VirtualSwitchConfig> Switches { get; } = new List<VirtualSwitchConfig>();
+        public List<VirtualSwitchConfig> Switches { get; set; } = new List<VirtualSwitchConfig>();
 
-        public static VirtualConfig FromXml(XElement element)
+        public void Validate()
         {
-            var obj = new VirtualConfig();
-            obj.Switches.AddRange(element.Elements("Switch").Select(element => VirtualSwitchConfig.FromXml(element)));
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("Virtual", Switches.Select(@switch => @switch.ToXml()));
+            foreach (var switchConfig in Switches)
+            {
+                switchConfig.Validate();
+            }
         }
     }
 
-    public class VirtualSwitchConfig
+    public class VirtualSwitchConfig : IValidator
     {
         public string Name { get; set; }
 
@@ -30,30 +24,12 @@ namespace HomeCenter.Config
 
         public string Status { get; set; }
 
-        public void Check()
+        public void Validate()
         {
             if (Name == null)
             {
                 throw new InvalidOperationException($"{nameof(Name)} is null");
             }
-        }
-
-        public static VirtualSwitchConfig FromXml(XElement element)
-        {
-            var obj = new VirtualSwitchConfig();
-            obj.Name = (string)element.Attribute(nameof(obj.Name));
-            obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.Status = (string)element.Attribute(nameof(obj.Status));
-            obj.Check();
-            return obj;
-        }
-
-        public XElement ToXml()
-        {
-            return new XElement("Switch",
-                new XAttribute(nameof(Name), Name),
-                Description != null ? new XAttribute(nameof(Description), Description) : null,
-                Status != null ? new XAttribute(nameof(Status), Status) : null);
         }
     }
 }
