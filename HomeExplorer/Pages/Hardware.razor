@@ -16,7 +16,7 @@
     <Row>
         @foreach (var group in groups.Where(group => group.Any(info => GetDeviceComponentType(info.Device) != null)).OrderBy(group => group.Key))
         {
-            <Column ColumnSize="ColumnSize.IsHalf">
+            <Column ColumnSize="ColumnSize.IsFull.OnMobile.IsHalf.OnDesktop.IsThird.OnFullHD">
                 <Card Margin="Margin.Is4.FromBottom">
                     @if (group.Key != null)
                     {
