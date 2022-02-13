@@ -55,10 +55,6 @@ namespace HomeExplorer
 
             app.UseRouting();
 
-            app.ApplicationServices
-                .UseBootstrapProviders()
-                .UseFontAwesomeIcons();
-
             app.ApplicationServices.GetService<AutomationService>().Start();
 
             app.UseEndpoints(endpoints =>
