@@ -5,6 +5,9 @@
     <Version>0.5.0</Version>
     <Authors>Pavel Zaytsev</Authors>
     <Description>Home automation UI</Description>
+    <Copyright>Copyright © 2022</Copyright>
+    <Company>Iberis Software</Company>
+    <Product>HomeCenter</Product>
   </PropertyGroup>
 
   <ItemGroup>
