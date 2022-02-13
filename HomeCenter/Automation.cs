@@ -191,7 +191,7 @@ namespace HomeCenter
                     SubscribeEvent(eventConfig, () =>
                     {
                         Log.Information("Handling event {Event}", eventConfig);
-                        if (triggerConfig.IsActive)
+                        if (triggerConfig.IsActive())
                         {
                             CallTrigger(triggerConfig);
                         }

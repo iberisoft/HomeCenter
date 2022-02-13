@@ -8,19 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\automation.xml" />
-    <Content Remove="wwwroot\hardware.xml" />
-    <Content Remove="wwwroot\home.xml" />
+    <Content Remove="wwwroot\automation.yml" />
+    <Content Remove="wwwroot\hardware.yml" />
+    <Content Remove="wwwroot\home.yml" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\automation.xml">
+    <None Include="wwwroot\automation.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\home.xml">
+    <None Include="wwwroot\home.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\hardware.xml">
+    <None Include="wwwroot\hardware.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

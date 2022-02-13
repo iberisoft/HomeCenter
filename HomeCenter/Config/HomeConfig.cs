@@ -1,48 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace HomeCenter.Config
 {
-    public class HomeConfig
+    public class HomeConfig : IValidator
     {
-        public List<RoomConfig> Rooms { get; } = new List<RoomConfig>();
+        public List<RoomConfig> Rooms { get; set; } = new List<RoomConfig>();
 
-        public RoomConfig GetRoom(string deviceName) => Rooms.FirstOrDefault(room => room.DeviceNames.Contains(deviceName));
+        public RoomConfig GetRoom(string deviceName) => Rooms.FirstOrDefault(roomConfig => roomConfig.DeviceNames.Contains(deviceName));
 
-        public static HomeConfig FromXml(XElement element)
+        public void Validate()
         {
-            var obj = new HomeConfig();
-            obj.Rooms.AddRange(element.Elements("Room").Select(element => RoomConfig.FromXml(element)));
-            return obj;
+            foreach (var roomConfig in Rooms)
+            {
+                roomConfig.Validate();
+            }
         }
     }
 
-    public class RoomConfig
+    public class RoomConfig : IValidator
     {
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public List<string> DeviceNames { get; } = new List<string>();
+        public List<string> DeviceNames { get; set; } = new List<string>();
 
-        public void Check()
+        public void Validate()
         {
             if (Name == null)
             {
                 throw new InvalidOperationException($"{nameof(Name)} is null");
             }
-        }
-
-        public static RoomConfig FromXml(XElement element)
-        {
-            var obj = new RoomConfig();
-            obj.Name = (string)element.Attribute(nameof(obj.Name));
-            obj.Description = (string)element.Attribute(nameof(obj.Description));
-            obj.DeviceNames.AddRange(element.Elements("Device").Select(element => (string)element.Attribute("Name")));
-            obj.Check();
-            return obj;
         }
     }
 }
