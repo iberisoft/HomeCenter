@@ -32,6 +32,7 @@ namespace HomeExplorer
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
 
+            services.AddHostedService(serviceProvider => serviceProvider.GetService<AutomationService>());
             services.AddSingleton<ConfigService>();
             services.AddSingleton<AutomationService>();
             services.AddSingleton(TextSink.Default);
@@ -54,8 +55,6 @@ namespace HomeExplorer
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.ApplicationServices.GetService<AutomationService>().Start();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,13 +1,15 @@
 ﻿using HomeCenter;
 using HomeCenter.Config;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HomeExplorer.Services
 {
-    class AutomationService
+    class AutomationService : IHostedService
     {
         readonly ConfigService m_ConfigService;
 
@@ -15,10 +17,6 @@ namespace HomeExplorer.Services
         {
             m_ConfigService = configService;
         }
-
-        public void Start() => Task.Run(async () => await StartAsync());
-
-        public void Stop() => Task.Run(async () => await StopAsync());
 
         readonly Automation m_Automation = new Automation();
         HomeConfig m_HomeConfig;
@@ -100,5 +98,9 @@ namespace HomeExplorer.Services
         public List<(string Name, object Device, string Description)> GetDeviceInfo() => m_Automation.GetDeviceInfo();
 
         public RoomConfig GetRoom(string deviceName) => m_HomeConfig.GetRoom(deviceName);
+
+        Task IHostedService.StartAsync(CancellationToken cancellationToken) => StartAsync();
+
+        Task IHostedService.StopAsync(CancellationToken cancellationToken) => StopAsync();
     }
 }
