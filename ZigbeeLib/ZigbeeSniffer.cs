@@ -43,8 +43,8 @@ namespace ZigbeeLib
             await m_NetClient.StopAsync();
         }
 
-        ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new();
-        TaskCompletionSource<IEnumerable<ZigbeeDevice>> m_DevicesSource = new();
+        readonly ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new();
+        readonly TaskCompletionSource<IEnumerable<ZigbeeDevice>> m_DevicesSource = new();
 
         public async Task<IEnumerable<ZigbeeDevice>> GetDevices() => await m_DevicesSource.Task;
 
