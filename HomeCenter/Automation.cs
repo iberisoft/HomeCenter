@@ -142,8 +142,8 @@ namespace HomeCenter
             return new() { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
-        public List<(string Name, object Device, string Description)> GetDeviceInfo() =>
-            m_Devices.Keys.Select(name => (name, m_Devices[name], m_DeviceDescriptions.TryGetValue(name, out string description) ? description : null)).ToList();
+        public List<DeviceInfo> GetDeviceInfo() =>
+            m_Devices.Keys.Select(name => new DeviceInfo(name, m_Devices[name], m_DeviceDescriptions.TryGetValue(name, out string description) ? description : null)).ToList();
 
         private object GetDevice(string name)
         {
@@ -314,5 +314,7 @@ namespace HomeCenter
             }
             return null;
         }
+
+        public record DeviceInfo(string Name, object Device, string Description);
     }
 }
