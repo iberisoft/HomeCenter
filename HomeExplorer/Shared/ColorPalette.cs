@@ -4,7 +4,7 @@ namespace HomeExplorer.Shared
 {
     class ColorPalette
     {
-        List<Color> m_Colors = new List<Color>();
+        List<Color> m_Colors = new();
 
         public ColorPalette()
         {

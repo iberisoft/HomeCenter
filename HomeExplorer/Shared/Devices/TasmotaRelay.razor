@@ -23,7 +23,7 @@ else
     public HomeCenter.Http.TasmotaRelay Device { get; set; }
 
     bool status;
-    Timer timer = new Timer(5000);
+    Timer timer = new(5000);
 
     protected override void OnInitialized()
     {

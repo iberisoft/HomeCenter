@@ -16,9 +16,9 @@ namespace HomeCenter
 {
     public class Automation
     {
-        readonly List<MiHome> m_MiHomeObjects = new List<MiHome>();
-        readonly Dictionary<string, object> m_Devices = new Dictionary<string, object>();
-        readonly Dictionary<string, string> m_DeviceDescriptions = new Dictionary<string, string>();
+        readonly List<MiHome> m_MiHomeObjects = new();
+        readonly Dictionary<string, object> m_Devices = new();
+        readonly Dictionary<string, string> m_DeviceDescriptions = new();
 
         public async Task<bool> FindDevicesAsync(HardwareConfig config)
         {
@@ -89,7 +89,7 @@ namespace HomeCenter
         private static MiHomeDeviceConfig CreateDeviceConfig(MiHomeDevice device)
         {
             var deviceType = device.GetType().Name;
-            return new MiHomeDeviceConfig { Name = deviceType + "_" + device.Sid, Id = device.Sid };
+            return new() { Name = deviceType + "_" + device.Sid, Id = device.Sid };
         }
 
         public List<(string Name, object Device, string Description)> GetDeviceInfo() =>
@@ -141,7 +141,7 @@ namespace HomeCenter
             UnsubscribeEvents();
         }
 
-        List<(EventInfo EventInfo, Delegate Handler, object Device)> m_SubscribedEvents = new List<(EventInfo EventInfo, Delegate Handler, object Device)>();
+        List<(EventInfo EventInfo, Delegate Handler, object Device)> m_SubscribedEvents = new();
 
         private void SubscribeEvent(EventConfig eventConfig, Action action)
         {
