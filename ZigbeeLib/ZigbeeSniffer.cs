@@ -15,7 +15,7 @@ namespace ZigbeeLib
 
         public ZigbeeSniffer()
         {
-            m_NetClient = new NetClient("zigbee2mqtt");
+            m_NetClient = new("zigbee2mqtt");
             m_NetClient.MessageReceived += NetClient_MessageReceived;
         }
 
@@ -43,8 +43,8 @@ namespace ZigbeeLib
             await m_NetClient.StopAsync();
         }
 
-        ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new ConcurrentDictionary<string, ZigbeeDevice>();
-        TaskCompletionSource<IEnumerable<ZigbeeDevice>> m_DevicesSource = new TaskCompletionSource<IEnumerable<ZigbeeDevice>>();
+        ConcurrentDictionary<string, ZigbeeDevice> m_Devices = new();
+        TaskCompletionSource<IEnumerable<ZigbeeDevice>> m_DevicesSource = new();
 
         public async Task<IEnumerable<ZigbeeDevice>> GetDevices() => await m_DevicesSource.Task;
 
