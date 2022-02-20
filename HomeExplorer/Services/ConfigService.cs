@@ -15,7 +15,7 @@ namespace HomeExplorer.Services
             m_Environment = environment;
         }
 
-        private string ConfigFilePath(string fileName) => Path.Combine(m_Environment.WebRootPath, fileName);
+        private string ConfigFilePath(string fileName) => Path.Combine(m_Environment.WebRootPath, "config", fileName);
 
         public string LoadConfig(string fileName) => File.Exists(ConfigFilePath(fileName)) ? File.ReadAllText(ConfigFilePath(fileName)) : "";
 

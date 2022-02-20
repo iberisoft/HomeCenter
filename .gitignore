@@ -344,3 +344,6 @@ launchSettings.json
 
 # JavaScript libraries
 */wwwroot/lib/
+
+# Configuration files
+*/wwwroot/config/
