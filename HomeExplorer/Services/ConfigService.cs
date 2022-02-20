@@ -41,7 +41,7 @@ namespace HomeExplorer.Services
             {
                 Log.Warning("File {FileName} not found", fileName);
             }
-            return new T();
+            return new();
         }
 
         public void SaveConfig<T>(string fileName, T config)

@@ -5,7 +5,7 @@ namespace HomeCenter.Config
 {
     public class VirtualConfig : IValidator
     {
-        public List<VirtualSwitchConfig> Switches { get; set; } = new List<VirtualSwitchConfig>();
+        public List<VirtualSwitchConfig> Switches { get; set; } = new();
 
         public void Validate()
         {

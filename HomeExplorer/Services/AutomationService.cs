@@ -18,7 +18,7 @@ namespace HomeExplorer.Services
             m_ConfigService = configService;
         }
 
-        readonly Automation m_Automation = new Automation();
+        readonly Automation m_Automation = new();
         HomeConfig m_HomeConfig;
 
         public async Task StartAsync()

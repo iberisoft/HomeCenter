@@ -6,7 +6,7 @@ namespace HomeCenter.Config
 {
     public class HomeConfig : IValidator
     {
-        public List<RoomConfig> Rooms { get; set; } = new List<RoomConfig>();
+        public List<RoomConfig> Rooms { get; set; } = new();
 
         public RoomConfig GetRoom(string deviceName) => Rooms.FirstOrDefault(roomConfig => roomConfig.DeviceNames.Contains(deviceName));
 
@@ -25,7 +25,7 @@ namespace HomeCenter.Config
 
         public string Description { get; set; }
 
-        public List<string> DeviceNames { get; set; } = new List<string>();
+        public List<string> DeviceNames { get; set; } = new();
 
         public void Validate()
         {

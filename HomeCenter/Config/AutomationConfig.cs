@@ -6,7 +6,7 @@ namespace HomeCenter.Config
 {
     public class AutomationConfig : IValidator
     {
-        public List<TriggerConfig> Triggers { get; set; } = new List<TriggerConfig>();
+        public List<TriggerConfig> Triggers { get; set; } = new();
 
         public void Validate()
         {
@@ -43,9 +43,9 @@ namespace HomeCenter.Config
             return true;
         }
 
-        public List<EventConfig> Events { get; set; } = new List<EventConfig>();
+        public List<EventConfig> Events { get; set; } = new();
 
-        public List<ActionConfig> Actions { get; set; } = new List<ActionConfig>();
+        public List<ActionConfig> Actions { get; set; } = new();
 
         public void Validate()
         {
@@ -140,7 +140,7 @@ namespace HomeCenter.Config
 
         public float Delay { get; set; }
 
-        public List<ConditionConfig> Conditions { get; set; } = new List<ConditionConfig>();
+        public List<ConditionConfig> Conditions { get; set; } = new();
 
         public void Validate()
         {

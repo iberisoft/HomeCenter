@@ -5,7 +5,7 @@ namespace HomeCenter.Config
 {
     public class MiHomeConfig : IValidator
     {
-        public List<MiHomeGatewayConfig> Gateways { get; set; } = new List<MiHomeGatewayConfig>();
+        public List<MiHomeGatewayConfig> Gateways { get; set; } = new();
 
         public void Validate()
         {
@@ -26,7 +26,7 @@ namespace HomeCenter.Config
 
         public string Password { get; set; }
 
-        public List<MiHomeDeviceConfig> Devices { get; set; } = new List<MiHomeDeviceConfig>();
+        public List<MiHomeDeviceConfig> Devices { get; set; } = new();
 
         public void Validate()
         {

@@ -5,7 +5,7 @@ namespace HomeCenter.Config
 {
     public class HttpConfig : IValidator
     {
-        public List<HttpDeviceConfig> Devices { get; set; } = new List<HttpDeviceConfig>();
+        public List<HttpDeviceConfig> Devices { get; set; } = new();
 
         public void Validate()
         {

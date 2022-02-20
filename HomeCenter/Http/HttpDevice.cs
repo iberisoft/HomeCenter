@@ -7,7 +7,7 @@ namespace HomeCenter.Http
     public abstract class HttpDevice
     {
         string m_Host;
-        readonly WebClient m_WebClient = new WebClient();
+        readonly WebClient m_WebClient = new();
 
         public string Host
         {

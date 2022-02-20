@@ -5,9 +5,9 @@ namespace HomeCenter.Config
 {
     public class MqttConfig : IValidator
     {
-        public List<ZigbeeSnifferConfig> ZigbeeSniffers { get; set; } = new List<ZigbeeSnifferConfig>();
+        public List<ZigbeeSnifferConfig> ZigbeeSniffers { get; set; } = new();
 
-        public List<MqttBrokertConfig> Brokers { get; set; } = new List<MqttBrokertConfig>();
+        public List<MqttBrokertConfig> Brokers { get; set; } = new();
 
         public void Validate()
         {
@@ -28,7 +28,7 @@ namespace HomeCenter.Config
 
         public int? Port { get; set; }
 
-        public List<ZigbeeDeviceConfig> Devices { get; set; } = new List<ZigbeeDeviceConfig>();
+        public List<ZigbeeDeviceConfig> Devices { get; set; } = new();
 
         public void Validate()
         {
@@ -70,7 +70,7 @@ namespace HomeCenter.Config
 
         public int? Port { get; set; }
 
-        public List<MqttDeviceConfig> Devices { get; set; } = new List<MqttDeviceConfig>();
+        public List<MqttDeviceConfig> Devices { get; set; } = new();
 
         public void Validate()
         {

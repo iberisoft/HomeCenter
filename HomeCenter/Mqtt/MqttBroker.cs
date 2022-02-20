@@ -12,7 +12,7 @@ namespace HomeCenter.Mqtt
 
         public MqttBroker()
         {
-            m_NetClient = new NetClient();
+            m_NetClient = new();
             m_NetClient.MessageReceived += NetClient_MessageReceived;
         }
 
@@ -35,7 +35,7 @@ namespace HomeCenter.Mqtt
             await m_NetClient.StopAsync();
         }
 
-        ConcurrentBag<MqttDevice> m_Devices = new ConcurrentBag<MqttDevice>();
+        ConcurrentBag<MqttDevice> m_Devices = new();
 
         public async Task AddDevice(MqttDevice device)
         {
