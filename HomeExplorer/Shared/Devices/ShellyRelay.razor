@@ -23,7 +23,7 @@ else
     public HomeCenter.Http.ShellyRelay Device { get; set; }
 
     bool status;
-    Timer timer = new(5000);
+    readonly Timer timer = new(5000);
 
     protected override void OnInitialized()
     {

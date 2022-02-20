@@ -141,7 +141,7 @@ namespace HomeCenter
             UnsubscribeEvents();
         }
 
-        List<(EventInfo EventInfo, Delegate Handler, object Device)> m_SubscribedEvents = new();
+        readonly List<(EventInfo EventInfo, Delegate Handler, object Device)> m_SubscribedEvents = new();
 
         private void SubscribeEvent(EventConfig eventConfig, Action action)
         {
