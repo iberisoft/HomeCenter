@@ -95,7 +95,7 @@ namespace HomeExplorer.Services
 
         public event EventHandler IsBusyChanged;
 
-        public List<(string Name, object Device, string Description)> GetDeviceInfo() => m_Automation.GetDeviceInfo();
+        public List<Automation.DeviceInfo> GetDeviceInfo() => m_Automation.GetDeviceInfo();
 
         public RoomConfig GetRoom(string deviceName) => m_HomeConfig.GetRoom(deviceName);
 
