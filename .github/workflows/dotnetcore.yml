@@ -14,12 +14,6 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-    - name: Create config files
-      run: |
-        echo "" > automation.yml
-        echo "" > hardware.yml
-        echo "" > home.yml
-      working-directory: ./HomeExplorer/wwwroot
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
