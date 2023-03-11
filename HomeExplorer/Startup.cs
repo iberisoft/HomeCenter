@@ -27,7 +27,7 @@ namespace HomeExplorer
 
             services.AddBlazorise(options =>
             {
-                options.ChangeTextOnKeyPress = false;
+                options.Immediate = false;
             })
             .AddBootstrapProviders()
             .AddFontAwesomeIcons();
