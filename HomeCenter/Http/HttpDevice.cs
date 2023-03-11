@@ -1,13 +1,13 @@
 ﻿using Serilog;
 using System;
-using System.Net;
+using System.Net.Http;
 
 namespace HomeCenter.Http
 {
     public abstract class HttpDevice
     {
         string m_Host;
-        readonly WebClient m_WebClient = new();
+        readonly HttpClient m_HttpClient = new();
 
         public string Host
         {
@@ -15,7 +15,7 @@ namespace HomeCenter.Http
             set
             {
                 m_Host = value;
-                m_WebClient.BaseAddress = BaseAddress;
+                m_HttpClient.BaseAddress = new(BaseAddress);
             }
         }
 
@@ -25,9 +25,9 @@ namespace HomeCenter.Http
         {
             try
             {
-                lock (m_WebClient)
+                lock (m_HttpClient)
                 {
-                    return m_WebClient.DownloadString(command);
+                    return m_HttpClient.GetStringAsync(command).Result;
                 }
             }
             catch (Exception ex)
