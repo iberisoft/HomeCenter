@@ -6,15 +6,15 @@
 <DeviceTitle Title="@Name" ImageSource="images/devices/SonoffBasic.jpg" />
 @if (status)
 {
-    <Blazorise.Text Alignment="TextAlignment.Center">
-        <b>ON</b>
-    </Blazorise.Text>
+    <Div TextWeight="TextWeight.Bold">
+        ON
+    </Div>
 }
 else
 {
-    <Blazorise.Text Alignment="TextAlignment.Center">
+    <Div>
         OFF
-    </Blazorise.Text>
+    </Div>
 }
 <Button Color="Color.Danger" Outline="true" Margin="Margin.Is1.OnY" Clicked="Toggle">Toggle</Button>
 
