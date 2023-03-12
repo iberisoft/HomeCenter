@@ -3,13 +3,13 @@
 <DeviceTitle Title="@Name" ImageSource="images/devices/MijiaGateway.jpg" />
 <Row>
     <Column>
-        <FigureImage Source="images/preferences-system-brightness-lock-icon.png" />
+        <Icon Name="IconName.Sun" />
         <Slider TValue="int" Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
     </Column>
 </Row>
 <Row>
     <Column>
-        <FigureImage Source="images/color-pencils-icon.png" />
+        <Icon Name="IconName.PaintBrush" />
         <Slider TValue="int" Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
     </Column>
 </Row>
@@ -29,7 +29,6 @@ else
 <Button Color="Color.Danger" Outline="true" Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
 <Row>
     <Column>
-        <FigureImage Source="images/music-library-icon.png" />
         <Dropdown>
             <DropdownToggle Color="Color.Primary" Outline="true">Play</DropdownToggle>
             <DropdownMenu>
