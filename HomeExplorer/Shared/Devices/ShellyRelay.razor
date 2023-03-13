@@ -52,13 +52,6 @@ else
     private void Toggle()
     {
         status = !status;
-        if (status)
-        {
-            Device.TurnOn();
-        }
-        else
-        {
-            Device.TurnOff();
-        }
+        Device.Toggle();
     }
 }

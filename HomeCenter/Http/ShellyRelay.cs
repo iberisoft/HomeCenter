@@ -21,6 +21,8 @@ namespace HomeCenter.Http
 
         public void TurnOff() => SendCommand("off");
 
+        public void Toggle() => SendCommand("toggle");
+
         protected override string SendCommand(string command)
         {
             if (command != "")
