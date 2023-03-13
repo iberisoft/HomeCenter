@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,6 +49,8 @@ namespace HomeExplorer.Services
                 }
 
                 var automationConfig = m_ConfigService.LoadConfig<AutomationConfig>("automation.yml");
+                var automationConfigEx = m_ConfigService.LoadConfigFolder<AutomationConfig>("automation", "*.yml");
+                automationConfig.Triggers.AddRange(automationConfigEx.SelectMany(automationConfig => automationConfig.Triggers));
                 m_Automation.Start(automationConfig);
                 IsStarted = true;
 

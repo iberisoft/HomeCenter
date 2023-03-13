@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace HomeExplorer.Services
@@ -53,6 +54,18 @@ namespace HomeExplorer.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Exception occurred when saving file {FileName}", fileName);
+            }
+        }
+
+        public IEnumerable<T> LoadConfigFolder<T>(string folderName, string filePattern)
+            where T : IValidator, new()
+        {
+            if (Directory.Exists(ConfigFilePath(folderName)))
+            {
+                foreach (var filePath in Directory.EnumerateFiles(ConfigFilePath(folderName), filePattern))
+                {
+                    yield return ConfigFile.Load<T>(filePath);
+                }
             }
         }
     }
