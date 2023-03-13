@@ -47,6 +47,8 @@ namespace HomeCenter.Config
 
         public List<ActionConfig> Actions { get; set; } = new();
 
+        public List<ConditionConfig> Conditions { get; set; } = new();
+
         public void Validate()
         {
             foreach (var eventConfig in Events)
@@ -56,6 +58,10 @@ namespace HomeCenter.Config
             foreach (var actionConfig in Actions)
             {
                 actionConfig.Validate();
+            }
+            foreach (var conditionConfig in Conditions)
+            {
+                conditionConfig.Validate();
             }
         }
 
