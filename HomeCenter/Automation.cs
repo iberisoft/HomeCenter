@@ -217,7 +217,7 @@ namespace HomeCenter
             }
             if (success)
             {
-                Log.Information("Validating condition {Condition}", conditionConfig);
+                Log.Information("Valid condition {Condition}", conditionConfig);
             }
             return success;
         }
