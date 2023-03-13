@@ -155,6 +155,10 @@ namespace HomeCenter
                     eventInfo.AddEventHandler(device, handler);
                     m_SubscribedEvents.Add((eventInfo, handler, device));
                 }
+                else
+                {
+                    Log.Warning("Event {Event} not found", eventConfig);
+                }
             }
         }
 
@@ -214,6 +218,10 @@ namespace HomeCenter
                     var conditionValue = converter.ConvertFromInvariantString(conditionConfig.Value);
                     success = conditionConfig.Compare(propertyValue, conditionValue);
                 }
+                else
+                {
+                    Log.Warning("Property {DeviceName}.{Property} not found", conditionConfig.DeviceName, conditionConfig.Property);
+                }
             }
             if (success)
             {
@@ -233,6 +241,10 @@ namespace HomeCenter
                 {
                     var parameters = methodInfo.GetParameters().Select(parameterInfo => GetCommandParameter(actionConfig, parameterInfo)).ToArray();
                     methodInfo.Invoke(device, parameters);
+                }
+                else
+                {
+                    Log.Warning("Action {Action} not found", actionConfig);
                 }
             }
         }
