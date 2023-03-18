@@ -43,7 +43,7 @@
 
     private static string GetTabTitle(string fileName)
     {
-        fileName = fileName[..fileName.IndexOf('.')];
+        fileName = fileName[..fileName.LastIndexOf('.')];
         return string.Join(" - ", fileName.Split(Path.DirectorySeparatorChar).Select(name => char.ToUpper(name[0]) + name[1..]));
     }
 
