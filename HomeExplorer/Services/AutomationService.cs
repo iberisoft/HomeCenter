@@ -49,8 +49,8 @@ namespace HomeExplorer.Services
                 }
 
                 var automationConfig = m_ConfigService.LoadConfig<AutomationConfig>("automation.yml");
-                var automationConfigEx = m_ConfigService.LoadConfigFolder<AutomationConfig>("automation", "*.yml");
-                automationConfig.Triggers.AddRange(automationConfigEx.SelectMany(automationConfig => automationConfig.Triggers));
+                var automationConfigList = m_ConfigService.LoadConfigFolder<AutomationConfig>("automation", "*.yml");
+                automationConfig.Triggers.AddRange(automationConfigList.SelectMany(automationConfig => automationConfig.Triggers));
                 m_Automation.Start(automationConfig);
                 IsStarted = true;
 
