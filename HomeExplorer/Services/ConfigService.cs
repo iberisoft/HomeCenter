@@ -18,6 +18,15 @@ namespace HomeExplorer.Services
 
         private string ConfigFilePath(string fileName) => Path.Combine(m_Environment.WebRootPath, "config", fileName);
 
+        public IEnumerable<string> EnumerateConfigFiles(string filePattern)
+        {
+            var configFolderPath = ConfigFilePath("");
+            foreach (var filePath in Directory.EnumerateFiles(configFolderPath, filePattern, SearchOption.AllDirectories))
+            {
+                yield return filePath[(configFolderPath.Length + 1)..];
+            }
+        }
+
         public string LoadConfig(string fileName) => File.Exists(ConfigFilePath(fileName)) ? File.ReadAllText(ConfigFilePath(fileName)) : "";
 
         public void SaveConfig(string fileName, string config) => File.WriteAllText(ConfigFilePath(fileName), config);
