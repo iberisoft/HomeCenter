@@ -1,5 +1,7 @@
 ﻿@page "/config"
 
+@using System.IO
+
 @inherits PageBase
 @inject AutomationService AutomationService
 @inject ConfigService ConfigService
@@ -14,26 +16,37 @@
 
 <Button Color="Color.Primary" Margin="Margin.Is1.FromBottom" Clicked="ApplyConfig">Apply</Button>
 
-<Tabs SelectedTab="hardware">
+<Tabs SelectedTab="hardware.yml">
     <Items>
-        <Tab Name="hardware">Hardware</Tab>
-        <Tab Name="home">Home</Tab>
-        <Tab Name="automation">Automation</Tab>
+        @foreach (var fileName in fileNames)
+        {
+            <Tab Name="@fileName">@GetTabTitle(fileName)</Tab>
+        }
     </Items>
     <Content>
-        <TabPanel Name="hardware">
-            <ConfigFileEditor FileName="hardware.yml" FileSaved="UpdateState" />
-        </TabPanel>
-        <TabPanel Name="home">
-            <ConfigFileEditor FileName="home.yml" FileSaved="UpdateState" />
-        </TabPanel>
-        <TabPanel Name="automation">
-            <ConfigFileEditor FileName="automation.yml" FileSaved="UpdateState" />
-        </TabPanel>
+        @foreach (var fileName in fileNames)
+        {
+            <TabPanel Name="@fileName">
+                <ConfigFileEditor FileName="@fileName" FileSaved="UpdateState" />
+            </TabPanel>
+        }
     </Content>
 </Tabs>
 
 @code {
+    List<string> fileNames;
+
+    protected override void OnInitialized()
+    {
+        fileNames = ConfigService.EnumerateConfigFiles("*.yml").ToList();
+    }
+
+    private static string GetTabTitle(string fileName)
+    {
+        fileName = fileName[..fileName.IndexOf('.')];
+        return string.Join(" - ", fileName.Split(Path.DirectorySeparatorChar).Select(name => char.ToUpper(name[0]) + name[1..]));
+    }
+
     private async Task ApplyConfig()
     {
         if (ConfigService.IsModified)
