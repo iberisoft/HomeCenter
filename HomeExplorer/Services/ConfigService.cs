@@ -18,7 +18,7 @@ namespace HomeExplorer.Services
 
         private string ConfigFilePath(string fileName) => Path.Combine(m_Environment.WebRootPath, "config", fileName);
 
-        public IEnumerable<string> EnumerateConfigFiles(string filePattern)
+        public IEnumerable<string> GetConfigFiles(string filePattern)
         {
             var configFolderPath = ConfigFilePath("");
             foreach (var filePath in Directory.EnumerateFiles(configFolderPath, filePattern, SearchOption.AllDirectories))

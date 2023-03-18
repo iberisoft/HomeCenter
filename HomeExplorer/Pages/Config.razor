@@ -38,7 +38,7 @@
 
     protected override void OnInitialized()
     {
-        fileNames = ConfigService.EnumerateConfigFiles("*.yml").ToList();
+        fileNames = ConfigService.GetConfigFiles("*.yml").ToList();
     }
 
     private static string GetTabTitle(string fileName)
