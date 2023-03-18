@@ -62,7 +62,7 @@ namespace HomeExplorer.Services
         {
             if (Directory.Exists(ConfigFilePath(folderName)))
             {
-                foreach (var filePath in Directory.EnumerateFiles(ConfigFilePath(folderName), filePattern))
+                foreach (var filePath in Directory.EnumerateFiles(ConfigFilePath(folderName), filePattern, SearchOption.AllDirectories))
                 {
                     yield return ConfigFile.Load<T>(filePath);
                 }
