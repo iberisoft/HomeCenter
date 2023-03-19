@@ -4,6 +4,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace HomeExplorer.Services
 {
@@ -21,7 +22,7 @@ namespace HomeExplorer.Services
         public IEnumerable<string> GetConfigFiles(string filePattern)
         {
             var configFolderPath = ConfigFilePath("");
-            foreach (var filePath in Directory.EnumerateFiles(configFolderPath, filePattern, SearchOption.AllDirectories))
+            foreach (var filePath in Directory.EnumerateFiles(configFolderPath, filePattern, SearchOption.AllDirectories).OrderBy(filePath => filePath))
             {
                 yield return filePath[(configFolderPath.Length + 1)..];
             }
