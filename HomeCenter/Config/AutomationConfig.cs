@@ -108,9 +108,7 @@ namespace HomeCenter.Config
                 return Equals(op1, op2);
             }
 
-            var comp1 = op1 as IComparable;
-            var comp2 = op2 as IComparable;
-            return comp1 != null && comp2 != null && comp1.CompareTo(comp2) == Comparison;
+            return op1 is IComparable comp1 && op2 is IComparable comp2 && comp1.CompareTo(comp2) == Comparison;
         }
 
         public void Validate()
