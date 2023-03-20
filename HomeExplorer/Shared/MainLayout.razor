@@ -1,7 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
-<NavMenu />
-
-<Container>
-    @Body
-</Container>
+<Layout>
+    <LayoutHeader Fixed>
+        <NavMenu />
+    </LayoutHeader>
+    <LayoutContent Padding="Padding.Is4.OnX">
+        @Body
+    </LayoutContent>
+</Layout>
