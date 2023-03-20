@@ -107,14 +107,19 @@ namespace HomeCenter
 
         public async Task CloseDevicesAsync()
         {
-            foreach (var miHome in m_MiHomeObjects)
+            try
             {
-                await Task.Run(() => miHome.Dispose());
+                foreach (var miHome in m_MiHomeObjects)
+                {
+                    await Task.Run(() => miHome.Dispose());
+                }
             }
-            m_MiHomeObjects.Clear();
-
-            m_Devices.Clear();
-            m_DeviceDescriptions.Clear();
+            finally
+            {
+                m_MiHomeObjects.Clear();
+                m_Devices.Clear();
+                m_DeviceDescriptions.Clear();
+            }
         }
 
         public void Start(AutomationConfig config)

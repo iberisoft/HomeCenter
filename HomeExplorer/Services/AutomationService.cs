@@ -30,7 +30,14 @@ namespace HomeExplorer.Services
             }
 
             Log.Information("Starting service...");
-            await DoWork(async () => await StartAsyncCore());
+            try
+            {
+                await DoWork(async () => await StartAsyncCore());
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Exception occurred when starting service");
+            }
             Log.Information("Service has started");
         }
 
@@ -69,7 +76,14 @@ namespace HomeExplorer.Services
             }
 
             Log.Information("Stopping service...");
-            await DoWork(async () => await StopAsyncCore());
+            try
+            {
+                await DoWork(async () => await StopAsyncCore());
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Exception occurred when stopping service");
+            }
             Log.Information("Service has stopped");
         }
 
