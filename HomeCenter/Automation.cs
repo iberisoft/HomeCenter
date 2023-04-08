@@ -222,15 +222,16 @@ namespace HomeCenter
                     var converter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
                     var conditionValue = converter.ConvertFromInvariantString(conditionConfig.Value);
                     success = conditionConfig.Compare(propertyValue, conditionValue);
+                    if (success)
+                    {
+                        Log.Information("{DeviceName}.{Property} matches condition: {PropertyValue} {Comparison} {ConditionValue}", conditionConfig.DeviceName, conditionConfig.Property,
+                            propertyValue, conditionConfig.ComparisonAsChar, conditionValue);
+                    }
                 }
                 else
                 {
                     Log.Warning("Property {DeviceName}.{Property} not found", conditionConfig.DeviceName, conditionConfig.Property);
                 }
-            }
-            if (success)
-            {
-                Log.Information("Valid condition {Condition}", conditionConfig);
             }
             return success;
         }
