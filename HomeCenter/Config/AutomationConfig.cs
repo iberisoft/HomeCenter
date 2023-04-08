@@ -99,7 +99,7 @@ namespace HomeCenter.Config
 
         public int Comparison { get; set; }
 
-        private char ComparisonAsChar => "<=>"[Comparison + 1];
+        public char ComparisonAsChar => "<=>"[Comparison + 1];
 
         public bool Compare(object op1, object op2)
         {
@@ -130,8 +130,6 @@ namespace HomeCenter.Config
                 throw new InvalidOperationException($"{nameof(Comparison)} must be -1, 0, 1");
             }
         }
-
-        public override string ToString() => $"{DeviceName}.{Property} {ComparisonAsChar} {Value}";
     }
 
     public class ActionConfig : IValidator
