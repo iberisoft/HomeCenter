@@ -1,11 +1,29 @@
-﻿<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark" Margin="Margin.Is3.FromBottom">
+﻿@inject IConfiguration Configuration
+
+<Bar Breakpoint="Breakpoint.Desktop" Background="Background.Dark" ThemeContrast="ThemeContrast.Dark" Margin="Margin.Is3.FromBottom">
     <Container>
         <BarToggler />
         <BarMenu>
             <BarStart>
                 <BarLink To="">Hardware</BarLink>
                 <BarLink To="config">Configuration</BarLink>
+                @if (loggerUrl != null)
+                {
+                    <BarLink To="@loggerUrl" Target="Target.Blank">Logger</BarLink>
+                }
             </BarStart>
         </BarMenu>
     </Container>
 </Bar>
+
+@code {
+    string loggerUrl;
+
+    protected override void OnInitialized()
+    {
+        var section = Configuration.GetSection("Serilog:WriteTo");
+        var settings = new List<SerilogSinkSettings>();
+        section.Bind(settings);
+        settings.SingleOrDefault(settings => settings.Name == "Seq")?.Args.TryGetValue("serverUrl", out loggerUrl);
+    }
+}
