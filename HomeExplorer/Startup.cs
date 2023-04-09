@@ -35,7 +35,6 @@ namespace HomeExplorer
             services.AddHostedService(serviceProvider => serviceProvider.GetService<AutomationService>());
             services.AddSingleton<ConfigService>();
             services.AddSingleton<AutomationService>();
-            services.AddSingleton(TextSink.Default);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
