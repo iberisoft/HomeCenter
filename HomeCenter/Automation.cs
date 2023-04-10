@@ -113,6 +113,10 @@ namespace HomeCenter
                 {
                     await Task.Run(() => miHome.Dispose());
                 }
+                foreach (var obj in m_Devices.Values.OfType<IDisposable>())
+                {
+                    obj.Dispose();
+                }
             }
             finally
             {

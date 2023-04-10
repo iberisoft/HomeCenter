@@ -4,10 +4,15 @@ using System.Net.Http;
 
 namespace HomeCenter.Http
 {
-    public abstract class HttpDevice
+    public abstract class HttpDevice : IDisposable
     {
         string m_Host;
         readonly HttpClient m_HttpClient = new();
+
+        public void Dispose()
+        {
+            m_HttpClient.Dispose();
+        }
 
         public string Host
         {
