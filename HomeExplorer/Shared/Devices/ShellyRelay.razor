@@ -37,6 +37,7 @@ else
     {
         timer.Elapsed -= OnTimer;
         timer.Enabled = false;
+        timer.Dispose();
     }
 
     private void OnTimer(object _, EventArgs e)
