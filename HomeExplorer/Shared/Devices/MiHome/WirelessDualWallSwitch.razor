@@ -4,15 +4,15 @@
 <DeviceTitle Title="@Name" ImageSource="images/devices/DuplexButton86.jpg" />
 <Row>
     <Column ColumnSize="ColumnSize.IsHalf">
-        <Text Alignment="TextAlignment.Center">
+        <Div>
             @Device.StatusLeft
-        </Text>
+        </Div>
         <DeviceEventTime EventTime="lastLeftEventTime" />
     </Column>
     <Column ColumnSize="ColumnSize.IsHalf">
-        <Text Alignment="TextAlignment.Center">
+        <Div>
             @Device.StatusRight
-        </Text>
+        </Div>
         <DeviceEventTime EventTime="lastRightEventTime" />
     </Column>
 </Row>

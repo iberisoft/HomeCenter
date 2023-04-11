@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,31 +30,42 @@ namespace HomeExplorer.Services
             }
 
             Log.Information("Starting service...");
-            await DoWork(async () =>
+            try
             {
-                Log.Information("Checking hardware...");
-                var hardwareConfig = m_ConfigService.LoadConfig<HardwareConfig>("hardware.yml");
-                if (await m_Automation.FindDevicesAsync(hardwareConfig))
-                {
-                    m_ConfigService.SaveConfig("hardware.yml", hardwareConfig);
-                    Log.Information("Hardware configuration updated");
-                }
-                await Task.Delay(1000);
-
-                var deviceInfo = m_Automation.GetDeviceInfo();
-                Log.Information("Found devices: {Count}", deviceInfo.Count);
-                foreach (var info in deviceInfo)
-                {
-                    Log.Information("{Name} - {Device}", info.Name, info.Device);
-                }
-
-                var automationConfig = m_ConfigService.LoadConfig<AutomationConfig>("automation.yml");
-                m_Automation.Start(automationConfig);
-                IsStarted = true;
-
-                m_HomeConfig = m_ConfigService.LoadConfig<HomeConfig>("home.yml");
-            });
+                await DoWork(async () => await StartAsyncCore());
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Exception occurred when starting service");
+            }
             Log.Information("Service has started");
+        }
+
+        private async Task StartAsyncCore()
+        {
+            Log.Information("Checking hardware...");
+            var hardwareConfig = m_ConfigService.LoadConfig<HardwareConfig>("hardware.yml");
+            if (await m_Automation.FindDevicesAsync(hardwareConfig))
+            {
+                m_ConfigService.SaveConfig("hardware.yml", hardwareConfig);
+                Log.Information("Hardware configuration updated");
+            }
+            await Task.Delay(1000);
+
+            var deviceInfo = m_Automation.GetDeviceInfo();
+            Log.Information("Found devices: {Count}", deviceInfo.Count);
+            foreach (var info in deviceInfo)
+            {
+                Log.Information("{Name} - {Device}", info.Name, info.Device);
+            }
+
+            var automationConfig = m_ConfigService.LoadConfig<AutomationConfig>("automation.yml");
+            var automationConfigList = m_ConfigService.LoadConfigFolder<AutomationConfig>("automation", "*.yml");
+            automationConfig.Triggers.AddRange(automationConfigList.SelectMany(automationConfig => automationConfig.Triggers));
+            m_Automation.Start(automationConfig);
+            IsStarted = true;
+
+            m_HomeConfig = m_ConfigService.LoadConfig<HomeConfig>("home.yml");
         }
 
         public async Task StopAsync()
@@ -64,14 +76,23 @@ namespace HomeExplorer.Services
             }
 
             Log.Information("Stopping service...");
-            await DoWork(async () =>
+            try
             {
-                m_Automation.Stop();
-                IsStarted = false;
-
-                await m_Automation.CloseDevicesAsync();
-            });
+                await DoWork(async () => await StopAsyncCore());
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Exception occurred when stopping service");
+            }
             Log.Information("Service has stopped");
+        }
+
+        private async Task StopAsyncCore()
+        {
+            m_Automation.Stop();
+            IsStarted = false;
+
+            await m_Automation.CloseDevicesAsync();
         }
 
         public bool IsStarted { get; private set; }

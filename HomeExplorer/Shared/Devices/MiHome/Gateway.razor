@@ -3,35 +3,34 @@
 <DeviceTitle Title="@Name" ImageSource="images/devices/MijiaGateway.jpg" />
 <Row>
     <Column>
-        <FigureImage Source="images/preferences-system-brightness-lock-icon.png" />
+        <Icon Name="IconName.Sun" />
         <Slider TValue="int" Min="1" Max="100" Value="brightness" ValueChanged="ChangeBrightness" />
     </Column>
 </Row>
 <Row>
     <Column>
-        <FigureImage Source="images/color-pencils-icon.png" />
+        <Icon Name="IconName.PaintBrush" />
         <Slider TValue="int" Min="0" Max="colorPalette.Count - 1" Value="colorIndex" ValueChanged="ChangeColor" />
     </Column>
 </Row>
 @if (status)
 {
     var style = "background: #" + colorPalette[colorIndex];
-    <Blazorise.Text Alignment="TextAlignment.Center" Style="@style">
-        <b>ON</b>
-    </Blazorise.Text>
+    <Div TextWeight="TextWeight.Bold" Style="@style">
+        ON
+    </Div>
 }
 else
 {
-    <Blazorise.Text Alignment="TextAlignment.Center">
+    <Div>
         OFF
-    </Blazorise.Text>
+    </Div>
 }
-<Button Color="Color.Danger" Outline="true" Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
+<Button Color="Color.Danger" Outline Margin="Margin.Is1.OnY" Clicked="ToggleLight">Toggle</Button>
 <Row>
     <Column>
-        <FigureImage Source="images/music-library-icon.png" />
         <Dropdown>
-            <DropdownToggle Color="Color.Primary" Outline="true">Play</DropdownToggle>
+            <DropdownToggle Color="Color.Primary" Outline>Play</DropdownToggle>
             <DropdownMenu>
                 @for (var i = 1; i <= 8; ++i)
                 {
@@ -50,7 +49,7 @@ else
                 }
             </DropdownMenu>
         </Dropdown>
-        <Button Color="Color.Secondary" Outline="true" Clicked="() => Device.StopPlayMusic()">Stop</Button>
+        <Button Color="Color.Secondary" Outline Clicked="() => Device.StopPlayMusic()">Stop</Button>
     </Column>
 </Row>
 

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace HomeExplorer.Services
 {
@@ -16,6 +18,15 @@ namespace HomeExplorer.Services
         }
 
         private string ConfigFilePath(string fileName) => Path.Combine(m_Environment.WebRootPath, "config", fileName);
+
+        public IEnumerable<string> GetConfigFiles(string filePattern)
+        {
+            var configFolderPath = ConfigFilePath("");
+            foreach (var filePath in Directory.EnumerateFiles(configFolderPath, filePattern, SearchOption.AllDirectories).OrderBy(filePath => filePath))
+            {
+                yield return filePath[(configFolderPath.Length + 1)..];
+            }
+        }
 
         public string LoadConfig(string fileName) => File.Exists(ConfigFilePath(fileName)) ? File.ReadAllText(ConfigFilePath(fileName)) : "";
 
@@ -53,6 +64,18 @@ namespace HomeExplorer.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Exception occurred when saving file {FileName}", fileName);
+            }
+        }
+
+        public IEnumerable<T> LoadConfigFolder<T>(string folderName, string filePattern)
+            where T : IValidator, new()
+        {
+            if (Directory.Exists(ConfigFilePath(folderName)))
+            {
+                foreach (var filePath in Directory.EnumerateFiles(ConfigFilePath(folderName), filePattern, SearchOption.AllDirectories))
+                {
+                    yield return ConfigFile.Load<T>(filePath);
+                }
             }
         }
     }

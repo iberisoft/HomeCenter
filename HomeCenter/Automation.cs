@@ -157,28 +157,35 @@ namespace HomeCenter
 
         public async Task CloseDevicesAsync()
         {
-            foreach (var miHome in m_MiHomeObjects)
+            try
             {
-                await Task.Run(() => miHome.Dispose());
+                foreach (var miHome in m_MiHomeObjects)
+                {
+                    await Task.Run(() => miHome.Dispose());
+                }
+                foreach (var sniffer in m_ZigbeeSniffers)
+                {
+                    await sniffer.Disconnect();
+                    sniffer.Dispose();
+                }
+                foreach (var broker in m_MqttBrokers)
+                {
+                    await broker.Disconnect();
+                    broker.Dispose();
+                }
+                foreach (var obj in m_Devices.Values.OfType<IDisposable>())
+                {
+                    obj.Dispose();
+                }
             }
-            m_MiHomeObjects.Clear();
-
-            foreach (var sniffer in m_ZigbeeSniffers)
+            finally
             {
-                await sniffer.Disconnect();
-                sniffer.Dispose();
+                m_MiHomeObjects.Clear();
+                m_ZigbeeSniffers.Clear();
+                m_MqttBrokers.Clear();
+                m_Devices.Clear();
+                m_DeviceDescriptions.Clear();
             }
-            m_ZigbeeSniffers.Clear();
-
-            foreach (var broker in m_MqttBrokers)
-            {
-                await broker.Disconnect();
-                broker.Dispose();
-            }
-            m_MqttBrokers.Clear();
-
-            m_Devices.Clear();
-            m_DeviceDescriptions.Clear();
         }
 
         public void Start(AutomationConfig config)
@@ -219,6 +226,10 @@ namespace HomeCenter
                     eventInfo.AddEventHandler(device, handler);
                     m_SubscribedEvents.Add((eventInfo, handler, device));
                 }
+                else
+                {
+                    Log.Warning("Event {Event} not found", eventConfig);
+                }
             }
         }
 
@@ -251,7 +262,7 @@ namespace HomeCenter
                         {
                             Thread.Sleep(TimeSpan.FromSeconds(actionConfig.Delay));
                         }
-                        if (actionConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
+                        if (actionConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)) && triggerConfig.Conditions.All(conditionConfig => CheckCondition(conditionConfig)))
                         {
                             CallAction(actionConfig);
                         }
@@ -277,11 +288,16 @@ namespace HomeCenter
                     var converter = TypeDescriptor.GetConverter(propertyInfo.PropertyType);
                     var conditionValue = converter.ConvertFromInvariantString(conditionConfig.Value);
                     success = conditionConfig.Compare(propertyValue, conditionValue);
+                    if (success)
+                    {
+                        Log.Information("{DeviceName}.{Property} matches condition: {PropertyValue} {Comparison} {ConditionValue}", conditionConfig.DeviceName, conditionConfig.Property,
+                            propertyValue, conditionConfig.ComparisonAsChar, conditionValue);
+                    }
                 }
-            }
-            if (success)
-            {
-                Log.Information("Validating condition {Condition}", conditionConfig);
+                else
+                {
+                    Log.Warning("Property {DeviceName}.{Property} not found", conditionConfig.DeviceName, conditionConfig.Property);
+                }
             }
             return success;
         }
@@ -297,6 +313,10 @@ namespace HomeCenter
                 {
                     var parameters = methodInfo.GetParameters().Select(parameterInfo => GetCommandParameter(actionConfig, parameterInfo)).ToArray();
                     methodInfo.Invoke(device, parameters);
+                }
+                else
+                {
+                    Log.Warning("Action {Action} not found", actionConfig);
                 }
             }
         }

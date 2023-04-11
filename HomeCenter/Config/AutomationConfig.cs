@@ -47,6 +47,8 @@ namespace HomeCenter.Config
 
         public List<ActionConfig> Actions { get; set; } = new();
 
+        public List<ConditionConfig> Conditions { get; set; } = new();
+
         public void Validate()
         {
             foreach (var eventConfig in Events)
@@ -56,6 +58,10 @@ namespace HomeCenter.Config
             foreach (var actionConfig in Actions)
             {
                 actionConfig.Validate();
+            }
+            foreach (var conditionConfig in Conditions)
+            {
+                conditionConfig.Validate();
             }
         }
 
@@ -93,7 +99,7 @@ namespace HomeCenter.Config
 
         public int Comparison { get; set; }
 
-        private char ComparisonAsChar => "<=>"[Comparison + 1];
+        public char ComparisonAsChar => "<=>"[Comparison + 1];
 
         public bool Compare(object op1, object op2)
         {
@@ -102,9 +108,7 @@ namespace HomeCenter.Config
                 return Equals(op1, op2);
             }
 
-            var comp1 = op1 as IComparable;
-            var comp2 = op2 as IComparable;
-            return comp1 != null && comp2 != null && comp1.CompareTo(comp2) == Comparison;
+            return op1 is IComparable comp1 && op2 is IComparable comp2 && comp1.CompareTo(comp2) == Comparison;
         }
 
         public void Validate()
@@ -126,8 +130,6 @@ namespace HomeCenter.Config
                 throw new InvalidOperationException($"{nameof(Comparison)} must be -1, 0, 1");
             }
         }
-
-        public override string ToString() => $"{DeviceName}.{Property} {ComparisonAsChar} {Value}";
     }
 
     public class ActionConfig : IValidator

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace HomeExplorer.Shared
+namespace HomeExplorer.Models
 {
     class ColorPalette
     {

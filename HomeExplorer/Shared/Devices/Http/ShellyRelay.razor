@@ -6,17 +6,17 @@
 <DeviceTitle Title="@Name" ImageSource="images/devices/Shelly1.png" />
 @if (status)
 {
-    <Blazorise.Text Alignment="TextAlignment.Center">
-        <b>ON</b>
-    </Blazorise.Text>
+    <Div TextWeight="TextWeight.Bold">
+        ON
+    </Div>
 }
 else
 {
-    <Blazorise.Text Alignment="TextAlignment.Center">
+    <Div>
         OFF
-    </Blazorise.Text>
+    </Div>
 }
-<Button Color="Color.Danger" Outline="true" Margin="Margin.Is1.OnY" Clicked="Toggle">Toggle</Button>
+<Button Color="Color.Danger" Outline Margin="Margin.Is1.OnY" Clicked="Toggle">Toggle</Button>
 
 @code {
     [Parameter]
@@ -37,6 +37,7 @@ else
     {
         timer.Elapsed -= OnTimer;
         timer.Enabled = false;
+        timer.Dispose();
     }
 
     private void OnTimer(object _, EventArgs e)
@@ -52,13 +53,6 @@ else
     private void Toggle()
     {
         status = !status;
-        if (status)
-        {
-            Device.TurnOn();
-        }
-        else
-        {
-            Device.TurnOff();
-        }
+        Device.Toggle();
     }
 }

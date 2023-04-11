@@ -1,7 +1,8 @@
-﻿@page "/hardware"
+﻿@page "/"
 
 @inherits PageBase
 @inject AutomationService AutomationService
+@inject ConfigService ConfigService
 
 <Heading Size="HeadingSize.Is1">Hardware</Heading>
 
@@ -10,6 +11,17 @@
     <Paragraph>Pending...</Paragraph>
     return;
 }
+
+<Div Margin="Margin.Is3.FromBottom">
+    @if (!AutomationService.IsStarted)
+    {
+        <Button Color="Color.Primary" Clicked="StartAutomation">Connect</Button>
+    }
+    else
+    {
+        <Button Color="Color.Primary" Clicked="StopAutomation">Disconnect</Button>
+    }
+</Div>
 
 @if (groups?.Count > 0)
 {
@@ -31,7 +43,7 @@
                                 if (GetDeviceComponentType(info.Device) != null)
                                 {
                                     <Column ColumnSize="ColumnSize.IsHalf">
-                                        <CardText Alignment="TextAlignment.Center">
+                                        <CardText TextAlignment="TextAlignment.Center">
                                             @RenderDevice(info.Device, info.Description ?? info.Name)
                                         </CardText>
                                     </Column>
@@ -56,6 +68,26 @@ else
     {
         base.OnInitialized();
 
+        InitializeGroups();
+    }
+
+    private async Task StartAutomation()
+    {
+        await AutomationService.StartAsync();
+
+        InitializeGroups();
+        ConfigService.IsModified = false;
+    }
+
+    private async Task StopAutomation()
+    {
+        await AutomationService.StopAsync();
+
+        groups = null;
+    }
+
+    private void InitializeGroups()
+    {
         groups = AutomationService.GetDeviceInfo()
             .GroupBy(info =>
             {

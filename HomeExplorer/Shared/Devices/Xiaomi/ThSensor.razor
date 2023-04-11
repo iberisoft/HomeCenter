@@ -2,9 +2,9 @@
 @implements IDisposable
 
 <DeviceTitle Title="@Name" ImageSource="images/devices/MiTempHumSensor.jpg" />
-<Text Alignment="TextAlignment.Center">
+<Div>
     @Device.Temperature&#x2103; @Device.Humidity%
-</Text>
+</Div>
 
 @code {
     [Parameter]
