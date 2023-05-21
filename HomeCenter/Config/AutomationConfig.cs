@@ -99,7 +99,7 @@ namespace HomeCenter.Config
 
         public int Comparison { get; set; }
 
-        public char ComparisonAsChar => "<=>"[Comparison + 1];
+        public string ComparisonAsString => new("<=>"[Comparison + 1], 1);
 
         public bool Compare(object op1, object op2)
         {

@@ -229,7 +229,7 @@ namespace HomeCenter
                     if (success)
                     {
                         Log.Information("{DeviceName}.{Property} matches condition: {PropertyValue} {Comparison} {ConditionValue}", conditionConfig.DeviceName, conditionConfig.Property,
-                            propertyValue, conditionConfig.ComparisonAsChar, conditionValue);
+                            propertyValue, conditionConfig.ComparisonAsString, conditionValue);
                     }
                 }
                 else
