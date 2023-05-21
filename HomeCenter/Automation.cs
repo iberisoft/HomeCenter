@@ -72,6 +72,11 @@ namespace HomeCenter
                     @switch.SetStatus(switchConfig.Status);
                     AddDevice(switchConfig.Name, switchConfig.Description, @switch);
                 }
+                foreach (var timerConfig in config.Virtual.Timers)
+                {
+                    var timer = new Virtual.Timer(timerConfig.Interval * 1000);
+                    AddDevice(timerConfig.Name, timerConfig.Description, timer);
+                }
             }
 
             return modified;
