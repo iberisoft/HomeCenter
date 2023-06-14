@@ -98,11 +98,11 @@ namespace HomeCenter
         }
 
         public List<DeviceInfo> GetDeviceInfo() =>
-            m_Devices.Keys.Select(name => new DeviceInfo(name, m_Devices[name], m_DeviceDescriptions.TryGetValue(name, out string description) ? description : null)).ToList();
+            m_Devices.Keys.Select(name => new DeviceInfo(name, m_Devices[name], m_DeviceDescriptions.TryGetValue(name, out var description) ? description : null)).ToList();
 
         private object GetDevice(string name)
         {
-            m_Devices.TryGetValue(name, out object device);
+            m_Devices.TryGetValue(name, out var device);
             if (device == null)
             {
                 Log.Warning("Device {Name} not found", name);
@@ -266,7 +266,7 @@ namespace HomeCenter
 
         private static object GetCommandParameter(ActionConfig actionConfig, ParameterInfo parameterInfo)
         {
-            if (actionConfig.CommandData != null && actionConfig.CommandData.TryGetValue(parameterInfo.Name, out string parameterValue))
+            if (actionConfig.CommandData != null && actionConfig.CommandData.TryGetValue(parameterInfo.Name, out var parameterValue))
             {
                 var converter = TypeDescriptor.GetConverter(parameterInfo.ParameterType);
                 return converter.ConvertFromInvariantString(parameterValue);
